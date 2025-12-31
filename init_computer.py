@@ -35,6 +35,7 @@ def first_start():
         thinking(1)
         sys.exit()
 
+    thinking(2)
     print(f"Ok! Well, enough for introductions. Let's go to the home screen!")
     thinking(2)
     print("Let me save your file and get this thing going!")
