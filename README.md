@@ -1,5 +1,5 @@
 # Captains-Log
-A place to write your Captains Log In The Terminal. Directly Inspired By StarTrek
+A place to write your Captain's Log in The Terminal. Directly Inspired By Star Trek
 
 ## Details
 "Computer" is a Prototype computer that was made during the construction of the Enterprise NX-01!
@@ -22,8 +22,8 @@ Locally stored terminal fun with a prototype Star Trek computer!
 - A project to help me grow as a programmer
 
 ## The Future
-As of when this readme had it's last commit, I want to build and improve on this project.
+As of when this readme had its last commit, I want to build and improve on this project.
 
-I plan to add more featured to it on the "Star Trek" computer side.
+I plan to add more features to it on the "Star Trek" computer side.
 
-But as a "Note Taking" program, it will always be pretty basic I think.
+But as a "Note Taking" program, it will always be pretty basic, I think.
