@@ -22,7 +22,7 @@ Locally stored terminal fun with a prototype Star Trek computer!
 - A project to help me grow as a programmer
 
 ## The Future
-As of when this readme was commited, I want to build and imporove on this project.
+As of when this readme had it's last commit, I want to build and improve on this project.
 
 I plan to add more featured to it on the "Star Trek" computer side.
 
