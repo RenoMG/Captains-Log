@@ -1,4 +1,4 @@
-from functions import thinking, saving
+from functions import thinking, saving, convert_date_to_julian
 import json, sys, os
 
 def first_start():
@@ -38,15 +38,32 @@ def first_start():
     thinking(2)
     print(f"Ok! Well, enough for introductions. Let's go to the home screen!")
     thinking(2)
-    print("Let me save your file and get this thing going!")
+    print("Let me save your file and get this thing going! I will make a template log for you at 'memory/logs/Heyyyooo")
     saving(2)
+    print("Please remember to not edit the Julian date and title position in the raw files, will make sorting annoying!")
+    thinking(2)
 
-    memories_directory = "memory/"
-    os.mkdir(memories_directory)
-    memories = {"name": name,
-            "custom_motd": None,}
-    
-    with open("memory/memories.json", "w") as f:
-        json.dump(memories, f, indent=4)
+    try: 
+        memories_directory = "memory/"
+        logs_directory = "memory/logs/"
+        os.mkdir(memories_directory)
+        os.mkdir(logs_directory)
+        memories = {"name": "Reno",
+                "custom_motd": None,}
+
+        with open("memory/memories.json", "w") as f:
+            json.dump(memories, f, indent=4)
+
+        get_date_conversion = convert_date_to_julian()
+        with open("memory/logs/Heyyyooo.txt", "w") as f:
+            f.write(f"Julian Date: {get_date_conversion} \n")
+            f.write("Title: Heyyyooo\n\n")
+            f.write("Start of Captains Log:\n")
+            f.write("On a far.. far away world... a computer from the Enterprise NX-01! Wait... OH YEAH THIS IS A DEMO LOG. Sorry, uhh so uhh yeah...\n\n")
+            f.write("Logs are stored like this in text files, and the Julian date and name of the log are stored at the top.\n")
+            f.write("My creator made this dinky little program while learning backend development, starting with PYTHON! I hope you find some joy in this!")
+
+    except Exception as e:
+        print(f"Uh oh.. something went wrong... I was not able to create the startup files fully! ERROR: {e}")
 
     return True
