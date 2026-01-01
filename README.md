@@ -12,7 +12,7 @@ Locally stored terminal fun with a prototype Star Trek computer!
 
 ## What is this not?
 - This is NOT a proper text editor
-- This is NOT a full fledged not keeping program
+- This is NOT a full fledged note keeping program
 - This is NOT a good way to store important notes and information
 
 ## What is this?
