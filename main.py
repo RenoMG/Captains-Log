@@ -1,5 +1,4 @@
 from init_computer import first_start
-from menu import menu_init
 import os
 
 def main():
@@ -7,6 +6,7 @@ def main():
         first_start()
 
     if os.path.exists("memory/memories.json") == True:
+        from menu import menu_init
         menu_init()
 
 main()

@@ -69,4 +69,5 @@ def first_start():
     except Exception as e:
         print(f"Uh oh.. something went wrong... I was not able to create the startup files fully! ERROR: {e}")
 
-    return True
+    from menu import menu
+    menu()

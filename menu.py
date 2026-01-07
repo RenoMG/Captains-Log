@@ -18,6 +18,7 @@ def menu_init():
     menu()
 
 def menu():
+    os.system("clear")
     computer.thinking_output = False
     get_motd = motd[random.randrange(3)]
     motd_name = computer.name
@@ -26,6 +27,7 @@ def menu():
     computer.thinking_output = True
 
     if get_choice["menu"] == "Create Log":
+        os.system("clear")
         title = input("What should the title be? - ")
         try: 
             if os.path.exists(f"memory/logs/{title}.txt") == True:
@@ -47,6 +49,7 @@ def menu():
         menu()
 
     if get_choice["menu"] == "Edit Log":
+        os.system("clear")
         computer.computer_reply(f"Ok, here is all of the logs you have. Please select one to edit!")
         log_to_edit = edit_log_choice()
         computer.computer_reply(f"Ok, opening {log_to_edit["logs"]}")
@@ -57,6 +60,7 @@ def menu():
         menu()
 
     if get_choice["menu"] == "Quit":
+        os.system("clear")
         computer.computer_reply(f"Awhhhh mannnn... ok {computer.name}! See you next time!")
         quit()
 
