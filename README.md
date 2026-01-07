@@ -11,15 +11,15 @@ Sit down and write up some logs, even make a custom MOTD to inspire yourself!
 Locally stored terminal fun with a prototype Star Trek computer!
 
 ## What is this not?
-- This is NOT a proper text editor
-- This is NOT a full fledged note keeping program
-- This is NOT a good way to store important notes and information
+- This is NOT a proper text editor, it uses other text editors to function.
+- This is NOT a full fledged note keeping program.
+- This is NOT a good way to store important notes and information(debated).
 
 ## What is this?
-- A fun Star Trek inspired project
-- A SIMULATION of an AI from Star Trek, not any sort of LLM
-- A fun way to "Become" somewhat of a Star Trek Captain 
-- A project to help me grow as a programmer
+- A fun Star Trek inspired project.
+- A SIMULATION of an AI from Star Trek, not any sort of LLM.
+- A fun way to "Become" somewhat of a Star Trek Captain.
+- A project to help me grow as a programmer.
 
 ## The Future
 As of when this readme had its last commit, I want to build and improve on this project.
