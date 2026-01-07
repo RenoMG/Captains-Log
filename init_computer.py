@@ -1,5 +1,5 @@
 from functions import computer_logic, init_question, general_question, editor_question
-import json, sys, os, inquirer
+import json, sys, os
 
 def first_start():
     print("Welcome Captain! Looks like this is your first time here!")
