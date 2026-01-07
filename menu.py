@@ -1,4 +1,4 @@
-from functions import convert_date_to_julian, computer_logic, general_question, editor_question, menu_choice
+from functions import convert_date_to_julian, computer_logic, general_question, editor_question, menu_choice, edit_log_choice
 import json, sys, os, random, subprocess
 
 #Load Captain memories
@@ -45,6 +45,21 @@ def menu():
         process.wait()
         os.system("clear")
         menu()
+
+    if get_choice["menu"] == "Edit Log":
+        computer.computer_reply(f"Ok, here is all of the logs you have. Please select one to edit!")
+        log_to_edit = edit_log_choice()
+        computer.computer_reply(f"Ok, opening {log_to_edit["logs"]}")
+
+        process = subprocess.Popen([computer.editor, f"memory/logs/{log_to_edit["logs"]}"])
+        process.wait()
+        os.system("clear")
+        menu()
+
+    if get_choice["menu"] == "Quit":
+        computer.computer_reply(f"Awhhhh mannnn... ok {computer.name}! See you next time!")
+        quit()
+
 
     
 

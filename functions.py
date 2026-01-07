@@ -1,6 +1,6 @@
 from astropy.time import Time
 from datetime import date
-import time, inquirer
+import time, inquirer, os
 
 def convert_date_to_julian():
     normal_date = date.today()
@@ -62,9 +62,24 @@ def menu_choice():
         inquirer.List(
             "menu",
             message="Please choose an option!",
-            choices=["Create Log", "list logs", "Log Stats", "edit settings", "About", "Quit"],
+            choices=["Create Log", "Edit Log", "list logs", "Log Stats", "edit settings", "About", "Quit"],
         )
     ]
 
     choice = inquirer.prompt(menu_choice)
+    return choice
+
+def edit_log_choice():
+    log_directory = "memory/logs"
+    log_files = [file for file in os.listdir(log_directory)]
+
+    log_choice = [
+        inquirer.List(
+            "logs",
+            message="Please choose a log!",
+            choices=log_files,
+        )
+    ]
+
+    choice = inquirer.prompt(log_choice)
     return choice
