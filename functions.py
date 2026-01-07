@@ -12,8 +12,12 @@ class computer_logic():
         self.seconds = seconds
         self.saving_state = saving_state
         self.editor = editor
+        self.thinking_output = True
 
     def computer_reply(self, computer_msg):
+        if self.thinking_output == False:
+            return print(computer_msg)
+
         if self.saving_state:
             time.sleep(self.seconds)
             print("Computer is saving data...")
@@ -51,4 +55,16 @@ def general_question():
     ]
 
     choice = inquirer.prompt(yes_or_no)
+    return choice
+
+def menu_choice():
+    menu_choice = [
+        inquirer.List(
+            "menu",
+            message="Please choose an option!",
+            choices=["Create Log", "list logs", "Log Stats", "edit settings", "About"],
+        )
+    ]
+
+    choice = inquirer.prompt(menu_choice)
     return choice

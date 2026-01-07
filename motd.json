@@ -1,4 +1,4 @@
-["Welcome! Today is a nice day to write a Captain's log, {computer.name}!", 
-"HELP! HELLP! AHHHH!!!... Sorry about that, Hello {computer.name}!", 
-"It's a nice day in the void of space, right, {computer.name}?"
+["Welcome! Today is a nice day to write a Captain's log, {captain_name}!", 
+"HELP! HELLP! AHHHH!!!... Sorry about that, Hello {captain_name}!", 
+"It's a nice day in the void of space, right, {captain_name}?"
 ]
