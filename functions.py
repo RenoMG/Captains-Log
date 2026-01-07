@@ -7,10 +7,11 @@ def convert_date_to_julian():
     return str(Time(str(normal_date)).jd)
 
 class computer_logic():
-    def __init__(self, name, seconds, saving_state):
+    def __init__(self, name, seconds, saving_state, editor):
         self.name = name
         self.seconds = seconds
         self.saving_state = saving_state
+        self.editor = editor
 
     def computer_reply(self, computer_msg):
         if self.saving_state:
@@ -30,6 +31,18 @@ def init_question():
     ]
 
     choice = inquirer.prompt(yes_or_no)
+    return choice
+
+def editor_question():
+    editor_choice = [
+        inquirer.List(
+            "editor",
+            message="Choose what editor you want to use!",
+            choices=["Nano", "Vim", "Neovim", "Gedit", "Kate", "Notepad(Windows)"],
+        )
+    ]
+
+    choice = inquirer.prompt(editor_choice)
     return choice
 
 def general_question():

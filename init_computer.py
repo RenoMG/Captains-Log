@@ -1,9 +1,9 @@
-from functions import convert_date_to_julian, computer_logic, init_question, general_question
+from functions import convert_date_to_julian, computer_logic, init_question, general_question, editor_question
 import json, sys, os, inquirer
 
 def first_start():
     print("Welcome Captain! Looks like this is your first time here!")
-    computer = computer_logic(input("What should I call you? - "), 2, False)
+    computer = computer_logic(input("What should I call you? - "), 2, False, None)
 
     if computer.name == "":
         computer.computer_reply("Hmmm... I did not get a name. You must be from the tippy top and need to keep things... as they used to say 'Down Low'.")
@@ -27,6 +27,10 @@ def first_start():
 
     computer.computer_reply(f"Ok! Well, enough for introductions. Let's go to the home screen!")
     computer.computer_reply("Let me save your file and get this thing going! I will make a template log for you at 'memory/logs/Heyyyooo'")
+    computer.computer_reply("OH! One more thing, what editor do you want to use?")
+    get_editor = editor_question()
+    computer.editor = get_editor["editor"]
+    computer.computer_reply(f"Ahh, {computer.editor}... nice!")
     computer.saving_state = True
     computer.computer_reply("Please remember to not edit the Julian date and title position in the raw files, will make sorting annoying!")
     computer.saving_state = False
@@ -47,7 +51,8 @@ def first_start():
         os.mkdir(memories_directory)
         os.mkdir(logs_directory)
         memories = {"name": f"{computer.name}",
-                "custom_motd": None,}
+                "custom_motd": "None",
+                "editor": f"{computer.editor}"}
 
         with open("memory/memories.json", "w") as f:
             json.dump(memories, f, indent=4)
