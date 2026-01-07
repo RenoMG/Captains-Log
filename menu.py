@@ -1,5 +1,5 @@
 from functions import convert_date_to_julian, computer_logic, general_question, editor_question, menu_choice
-import json, sys, os, random
+import json, sys, os, random, subprocess
 
 #Load Captain memories
 with open("memory/memories.json", "r") as f:
@@ -34,6 +34,12 @@ def menu():
 
         except Exception as e:
             print(f"Uh oh.. something went wrong... I was not able to create the log! ERROR: {e}")
+        
+        process = subprocess.Popen([computer.editor, f"memory/logs/{title}.txt"])
+        process.wait()
+        os.system("clear")
+        menu()
+
     
 
 

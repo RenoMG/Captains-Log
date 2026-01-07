@@ -42,7 +42,7 @@ def editor_question():
         inquirer.List(
             "editor",
             message="Choose what editor you want to use!",
-            choices=["Nano", "Vim", "Neovim", "Gedit", "Kate", "Notepad(Windows)"],
+            choices=["Nano", "Vim", "Neovim", "Gedit", "Kate", "Notepad"],
         )
     ]
 
@@ -62,7 +62,7 @@ def menu_choice():
         inquirer.List(
             "menu",
             message="Please choose an option!",
-            choices=["Create Log", "list logs", "Log Stats", "edit settings", "About"],
+            choices=["Create Log", "list logs", "Log Stats", "edit settings", "About", "Quit"],
         )
     ]
 

@@ -52,7 +52,7 @@ def first_start():
         os.mkdir(logs_directory)
         memories = {"name": f"{computer.name}",
                 "custom_motd": "None",
-                "editor": f"{computer.editor}"}
+                "editor": f"{computer.editor.lower()}"}
 
         with open("memory/memories.json", "w") as f:
             json.dump(memories, f, indent=4)
