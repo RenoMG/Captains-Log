@@ -23,10 +23,14 @@ def menu():
     motd_name = computer.name
     computer.computer_reply("MOTD: " + get_motd.format(captain_name=motd_name))
     get_choice = menu_choice()
+    computer.thinking_output = True
 
     if get_choice["menu"] == "Create Log":
         title = input("What should the title be? - ")
         try: 
+            if os.path.exists(f"memory/logs/{title}.txt") == True:
+                computer.computer_reply("A log with that name already exists, opening it now!")
+
             get_date_conversion = convert_date_to_julian()
             with open(f"memory/logs/{title}.txt", "w") as f:
                 f.write(f"Julian Date: {get_date_conversion} \n")
@@ -34,6 +38,8 @@ def menu():
 
         except Exception as e:
             print(f"Uh oh.. something went wrong... I was not able to create the log! ERROR: {e}")
+
+        computer.computer_reply(f"The log has been created, {computer.name}! Time to get typing!")
         
         process = subprocess.Popen([computer.editor, f"memory/logs/{title}.txt"])
         process.wait()
