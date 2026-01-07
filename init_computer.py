@@ -1,4 +1,4 @@
-from functions import computer_logic, init_question, general_question, editor_question
+from functions import convert_date_to_julian, computer_logic, init_question, general_question, editor_question
 import json, sys, os
 
 def first_start():
