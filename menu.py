@@ -54,8 +54,12 @@ def menu():
         log_to_edit = edit_log_choice()
         computer.computer_reply(f"Ok, opening {log_to_edit["logs"]}")
 
-        process = subprocess.Popen([computer.editor, f"memory/logs/{log_to_edit["logs"]}"])
-        process.wait()
+        try: 
+            process = subprocess.Popen([computer.editor, f"memory/logs/{log_to_edit["logs"]}"])
+            process.wait()
+        except Exception as e:
+            print(f"Uh oh.. something went wrong... I was not able to edit the log! ERROR: {e}")
+
         os.system("clear")
         menu()
 
