@@ -69,7 +69,7 @@ def menu():
         computer.computer_reply(f"Awhhhh mannnn... ok {computer.name}! See you next time!")
         quit()
 
-    if get_choice["menu"] == "Log Stats":
+    if get_choice["menu"] == "List logs":
         os.system("clear")
         file_list = [file for file in os.listdir(log_directory)]
         print(f"Total Logs: {len(file_list)}")
@@ -86,7 +86,40 @@ def menu():
         input("--\nPress Enter to close.")
         menu()
 
+    if get_choice["menu"] == "Log Stats":
+        os.system("clear")
+        file_list = [file for file in os.listdir(log_directory)]
+        print(f"Log Stats for {computer.name}!")
+        
+        the_uses = []
+        romulan_uses = []
+        period_uses = []
 
+        for file in file_list:
+            with open(f"{log_directory}/{file}", "r") as f: 
+                text = f.read().lower().split(" ")
+
+            with open(f"{log_directory}/{file}", "r") as f: 
+                period_text = f.read()
+
+            for word in text:
+                if "the" in word:
+                    the_uses.append(word)
+
+                if "romulan" in word or "romulans" in word:
+                    romulan_uses.append(word)
+
+            for ch in period_text:
+                if "." in ch:
+                    period_uses.append(ch)
+
+        print(f"-- \nTotal Logs: {len(file_list)}")
+        print(f"\nTotal Uses of the word 'The': {len(the_uses)}")
+        print(f"\nTotal Uses of the word 'Romulan'(They scare me): {len(romulan_uses)}")
+        print(f"\nTotal Periods: {len(period_uses)}")
+            
+        input("--\nPress Enter to close.")
+        menu()
 
     
 
