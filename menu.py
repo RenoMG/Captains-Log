@@ -1,5 +1,6 @@
 from functions import convert_date_to_julian, computer_logic, general_question, editor_question, menu_choice, edit_log_choice
 import json, sys, os, random, subprocess
+log_directory = "memory/logs"
 
 #Load Captain memories
 with open("memory/memories.json", "r") as f:
@@ -67,6 +68,24 @@ def menu():
         os.system("clear")
         computer.computer_reply(f"Awhhhh mannnn... ok {computer.name}! See you next time!")
         quit()
+
+    if get_choice["menu"] == "Log Stats":
+        os.system("clear")
+        file_list = [file for file in os.listdir(log_directory)]
+        print(f"Total Logs: {len(file_list)}")
+
+        for file in file_list:
+            with open(f"{log_directory}/{file}") as f: 
+                julian_date = f.readline().strip("Julian Date: ").strip(" \n")
+
+            with open(f"{log_directory}/{file}") as f: 
+                title_name = f.readlines()[1].strip("Title: ").strip(" \n")
+
+            print(f"-- \nFile Name: {file},\nTitle: {title_name},\nCreation Date: {julian_date}")
+            
+        input("--\nPress Enter to close.")
+        menu()
+
 
 
     
