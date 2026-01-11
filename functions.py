@@ -83,3 +83,11 @@ def edit_log_choice():
 
     choice = inquirer.prompt(log_choice)
     return choice
+
+def about_website_question():
+    yes_or_no = [
+        inquirer.Confirm("choice", message="Y for Yes / N for No."),
+    ]
+
+    choice = inquirer.prompt(yes_or_no)
+    return choice

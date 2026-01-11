@@ -1,5 +1,5 @@
-from functions import convert_date_to_julian, computer_logic, general_question, editor_question, menu_choice, edit_log_choice
-import json, sys, os, random, subprocess
+from functions import convert_date_to_julian, computer_logic, general_question, editor_question, menu_choice, edit_log_choice, about_website_question
+import json, sys, os, random, subprocess, webbrowser
 log_directory = "memory/logs"
 
 #Load Captain memories
@@ -121,6 +121,25 @@ def menu():
         input("--\nPress Enter to close.")
         menu()
 
+    if get_choice["menu"] == "About":
+        os.system("clear")
+        computer.computer_reply(f"Welcome to the about page!")
+        computer.computer_reply(f"This program was made by Reno! A beginner programmer!")
+        computer.computer_reply(f"I love watching Star Trek and thought this would be fun to make at my skill level!")
+        computer.computer_reply(f"Would you like to visit my website?")
+
+        visit_website = about_website_question()
+        if visit_website["choice"]:
+            try: 
+                webbrowser.open("https://renos.world", new=0, autoraise=True)
+                raise RuntimeError("RuntimeError")
+            except Exception as e:
+                input(f"Error: {e}, are you using a headless setup like WSL? ")
+        else:
+            computer.computer_reply(input(f"Ah... ok... Well! Press any key to return to the menu!"))
+
+        os.system("clear")
+        menu()
     
 
 
