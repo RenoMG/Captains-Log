@@ -2,9 +2,9 @@ from functions import convert_date_to_julian, computer_logic, init_question, gen
 import json, sys, os
 
 def first_start():
-    computer = computer_logic(None, 2, False, None)
+    computer = computer_logic()
     computer.reply("Welcome Captain! Looks like this is your first time here!")
-    computer.reply(input("\nWhat should I call you? - "))
+    computer.name = input("What should I call you? - ")
 
     if computer.name == "":
         computer.reply("Hmmm... I did not get a name. You must be from the tippy top and need to keep things... as they used to say 'Down Low'.")

@@ -7,35 +7,43 @@ def convert_date_to_julian():
     return str(Time(str(normal_date)).jd)
 
 class computer_logic():
-    def __init__(self, name, seconds, saving_state, editor):
-        self.name = name
-        self.seconds = seconds
-        self.saving_state = saving_state
-        self.editor = editor
-        self.thinking_output = True
+    def __init__(self):
+        self.name = "Captain"
+        self.seconds = 2
+        self.saving_state = False
+        self.typing_speed = 0.15
+        self.editor = None
+
+    def computer_loading_animation(self):
+        loading_ch = ["=  ", " = ", "  =", " = ", "=  ", "=  ", " = ", "  =", " = ", "=  ",]
+        for ch in loading_ch:
+            print(f"{ch} Loading", end="\r")
+            time.sleep(0.1)
+
+    def computer_saving_animation(self):
+        saving_ch = ["⣾", "⣽", "⣻", "⢿", "⡿", "⣟", "⣯", "⣷"]
+        for ch in saving_ch:
+            print(f"{ch} Saving Data", end="\r")
+            time.sleep(0.1)
 
     def reply(self, computer_msg):
-        if self.thinking_output == False:
-            return print(computer_msg)
-
         if self.saving_state:
             time.sleep(self.seconds)
-            print("\nComputer is saving data...")
-            time.sleep(self.seconds)
+            self.computer_saving_animation()
+            print("\n")
             text_string = ""
             for letter in computer_msg:
                 print(f"{text_string}{letter}", end="\r")
                 text_string += letter
-                time.sleep(0.2)
+                time.sleep(self.typing_speed)
         else:
             time.sleep(self.seconds)
             text_string = ""
             for letter in computer_msg:
                 print(f"{text_string}{letter}", end="\r")
                 text_string += letter
-                time.sleep(0.2)
-            print("\nComputer is thinking...")
-            time.sleep(self.seconds)
+                time.sleep(self.typing_speed)
+            print("\n")
 
 def init_question():
     yes_or_no = [
