@@ -1,18 +1,30 @@
-from functions import convert_date_to_julian, computer_logic, init_question, general_question, editor_question
+from functions import convert_date_to_julian, computer_logic, init_bonus_question, general_question, editor_question, init_name_question
 import json, sys, os
 
 def first_start():
     computer = computer_logic()
     computer.reply("Welcome Captain! Looks like this is your first time here!")
-    computer.name = input("What should I call you? - ")
+    computer.reply("Let's begin the setup process!")
+    computer.reply("I will now ask you some questions to get started! Let's start with your name")
+    name_question = init_name_question()
+    computer.name = name_question["name"]
+    computer.saving_state = True
 
     if computer.name == "":
+        computer.saving_state = False
         computer.reply("Hmmm... I did not get a name. You must be from the tippy top and need to keep things... as they used to say 'Down Low'.")
         computer.reply("Since you did not give me a name, I will call you 'Captain'!")
+        computer.saving_state = False
         computer.name = "Captain"
 
-    computer.reply(f"Ahhh.... {computer.name}!")
     computer.reply(f"Nice to meet you, {computer.name}!")
+    computer.saving_state = False
+    
+    get_editor = editor_question()
+    computer.editor = get_editor["editor"]
+    computer.reply(f"Ahh, {computer.editor}... nice!")
+    computer.reply("")
+
     computer.reply(f"Well, {computer.name}! As you may have noticed... I am not as fast as the other systems you may have interacted with...")
     computer.reply(f"I am a prototype of the computer that is on Captain Archer's Ship, the Enterprise NX-01!")
     computer.reply(f"And, well... All I can do is store Captain logs... yeah. BUT! WAIT! DON'T GO!")
@@ -28,15 +40,11 @@ def first_start():
 
     computer.reply(f"Ok! Well, enough for introductions. Let's go to the home screen!")
     computer.reply("Let me save your file and get this thing going! I will make a template log for you at 'memory/logs/Heyyyooo'")
-    computer.reply("OH! One more thing, what editor do you want to use?")
-    get_editor = editor_question()
-    computer.editor = get_editor["editor"]
-    computer.reply(f"Ahh, {computer.editor}... nice!")
-    computer.saving_state = True
+
     computer.reply("Please remember to not edit the Julian date and title position in the raw files, will make sorting annoying!")
     computer.saving_state = False
     computer.reply("OK! Are you ready to get this thing going?")
-    go_home = init_question()
+    go_home = init_bonus_question()
     if go_home['Yes']:
         computer.reply("OK! Let's go!")
     else:

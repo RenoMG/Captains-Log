@@ -9,22 +9,28 @@ def convert_date_to_julian():
 class computer_logic():
     def __init__(self):
         self.name = "Captain"
-        self.seconds = 2
+        self.seconds = 1.5
         self.saving_state = False
-        self.typing_speed = 0.15
+        self.typing_speed = 0.1
         self.editor = None
 
     def computer_loading_animation(self):
-        loading_ch = ["=  ", " = ", "  =", " = ", "=  ", "=  ", " = ", "  =", " = ", "=  ",]
+        loading_ch = ["⣾", "⣽", "⣻", "⢿", "⡿", "⣟", "⣯", "⣷", "⣾", "⣽", "⣻", "⢿", "⡿", "⣟", "⣯", "⣷", "⣾", "⣽", "⣻", "⢿", "⡿", "⣟", "⣯", "⣷", "⣾"]
         for ch in loading_ch:
             print(f"{ch} Loading", end="\r")
             time.sleep(0.1)
 
     def computer_saving_animation(self):
-        saving_ch = ["⣾", "⣽", "⣻", "⢿", "⡿", "⣟", "⣯", "⣷"]
+        saving_ch = ["⣾", "⣽", "⣻", "⢿", "⡿", "⣟", "⣯", "⣷", "⣾", "⣽", "⣻", "⢿", "⡿", "⣟", "⣯", "⣷", "⣾", "⣽", "⣻", "⢿", "⡿", "⣟", "⣯", "⣷", "⣾"]
+        timer = 0
         for ch in saving_ch:
-            print(f"{ch} Saving Data", end="\r")
-            time.sleep(0.1)
+            if timer != 24:
+                print(f"{ch} Saving Data", end="\r")
+                time.sleep(0.1)
+                timer += 1
+            else:
+                print(f"Data Saved!       ", end="\r")
+
 
     def reply(self, computer_msg):
         if self.saving_state:
@@ -45,7 +51,7 @@ class computer_logic():
                 time.sleep(self.typing_speed)
             print("\n")
 
-def init_question():
+def init_bonus_question():
     yes_or_no = [
         inquirer.Confirm("Yes", message="Y for home screen / N for Romulans(ANGRY VULCANS) attack"),
     ]
@@ -107,3 +113,12 @@ def about_website_question():
 
     choice = inquirer.prompt(yes_or_no)
     return choice
+
+def init_name_question():
+    questions = [
+        inquirer.Text(name="name", message="What is your name?"),
+    ]
+
+    answer = inquirer.prompt(questions)
+    print("\n")
+    return answer
