@@ -14,19 +14,27 @@ class computer_logic():
         self.editor = editor
         self.thinking_output = True
 
-    def computer_reply(self, computer_msg):
+    def reply(self, computer_msg):
         if self.thinking_output == False:
             return print(computer_msg)
 
         if self.saving_state:
             time.sleep(self.seconds)
-            print("Computer is saving data...")
+            print("\nComputer is saving data...")
             time.sleep(self.seconds)
-            print(computer_msg)
+            text_string = ""
+            for letter in computer_msg:
+                print(f"{text_string}{letter}", end="\r")
+                text_string += letter
+                time.sleep(0.2)
         else:
-            print("Computer is thinking...")
             time.sleep(self.seconds)
-            print(computer_msg)
+            text_string = ""
+            for letter in computer_msg:
+                print(f"{text_string}{letter}", end="\r")
+                text_string += letter
+                time.sleep(0.2)
+            print("\nComputer is thinking...")
             time.sleep(self.seconds)
 
 def init_question():

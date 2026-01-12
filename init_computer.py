@@ -2,48 +2,49 @@ from functions import convert_date_to_julian, computer_logic, init_question, gen
 import json, sys, os
 
 def first_start():
-    print("Welcome Captain! Looks like this is your first time here!")
-    computer = computer_logic(input("What should I call you? - "), 2, False, None)
+    computer = computer_logic(None, 2, False, None)
+    computer.reply("Welcome Captain! Looks like this is your first time here!")
+    computer.reply(input("\nWhat should I call you? - "))
 
     if computer.name == "":
-        computer.computer_reply("Hmmm... I did not get a name. You must be from the tippy top and need to keep things... as they used to say 'Down Low'.")
-        computer.computer_reply("Since you did not give me a name, I will call you 'Captain'!")
+        computer.reply("Hmmm... I did not get a name. You must be from the tippy top and need to keep things... as they used to say 'Down Low'.")
+        computer.reply("Since you did not give me a name, I will call you 'Captain'!")
         computer.name = "Captain"
 
-    computer.computer_reply(f"Ahhh.... {computer.name}!")
-    computer.computer_reply(f"Nice to meet you, {computer.name}!")
-    computer.computer_reply(f"Well, {computer.name}! As you may have noticed... I am not as fast as the other systems you may have interacted with...")
-    computer.computer_reply(f"I am a prototype of the computer that is on Captain Archer's Ship, the Enterprise NX-01!")
-    computer.computer_reply(f"And, well... All I can do is store Captain logs... yeah. BUT! WAIT! DON'T GO!")
-    computer.computer_reply(f"Writing Captain logs is FUNNNnnn... are you still here?")
+    computer.reply(f"Ahhh.... {computer.name}!")
+    computer.reply(f"Nice to meet you, {computer.name}!")
+    computer.reply(f"Well, {computer.name}! As you may have noticed... I am not as fast as the other systems you may have interacted with...")
+    computer.reply(f"I am a prototype of the computer that is on Captain Archer's Ship, the Enterprise NX-01!")
+    computer.reply(f"And, well... All I can do is store Captain logs... yeah. BUT! WAIT! DON'T GO!")
+    computer.reply(f"Writing Captain logs is FUNNNnnn... are you still here?")
 
     still_here = general_question()
     if still_here["choice"]:
-        computer.computer_reply(f"HAHAHA, YES! I mean uhhh... glad to see you're still here {computer.name}")
+        computer.reply(f"HAHAHA, YES! I mean uhhh... glad to see you're still here {computer.name}")
     else:
-        computer.computer_reply(f"Awwww man... another one bites the dust... ;(")
+        computer.reply(f"Awwww man... another one bites the dust... ;(")
         computer.seconds = 1
         sys.exit()
 
-    computer.computer_reply(f"Ok! Well, enough for introductions. Let's go to the home screen!")
-    computer.computer_reply("Let me save your file and get this thing going! I will make a template log for you at 'memory/logs/Heyyyooo'")
-    computer.computer_reply("OH! One more thing, what editor do you want to use?")
+    computer.reply(f"Ok! Well, enough for introductions. Let's go to the home screen!")
+    computer.reply("Let me save your file and get this thing going! I will make a template log for you at 'memory/logs/Heyyyooo'")
+    computer.reply("OH! One more thing, what editor do you want to use?")
     get_editor = editor_question()
     computer.editor = get_editor["editor"]
-    computer.computer_reply(f"Ahh, {computer.editor}... nice!")
+    computer.reply(f"Ahh, {computer.editor}... nice!")
     computer.saving_state = True
-    computer.computer_reply("Please remember to not edit the Julian date and title position in the raw files, will make sorting annoying!")
+    computer.reply("Please remember to not edit the Julian date and title position in the raw files, will make sorting annoying!")
     computer.saving_state = False
-    computer.computer_reply("OK! Are you ready to get this thing going?")
+    computer.reply("OK! Are you ready to get this thing going?")
     go_home = init_question()
     if go_home['Yes']:
-        computer.computer_reply("OK! Let's go!")
+        computer.reply("OK! Let's go!")
     else:
-        computer.computer_reply("Faking Vulcan message signature")
-        computer.computer_reply("Calling Romulans(ANGRY VULCANS)")
-        computer.computer_reply("Got reply, telling Romulans(ANGRY VULCANS) that Vulcans are better.")
-        computer.computer_reply("Telling Romulans(ANGRY VULCANS) that Vulcans are plotting to take over the galaxy.")
-        computer.computer_reply("Got reply... I think I just started a war...")
+        computer.reply("Faking Vulcan message signature")
+        computer.reply("Calling Romulans(ANGRY VULCANS)")
+        computer.reply("Got reply, telling Romulans(ANGRY VULCANS) that Vulcans are better.")
+        computer.reply("Telling Romulans(ANGRY VULCANS) that Vulcans are plotting to take over the galaxy.")
+        computer.reply("Got reply... I think I just started a war...")
 
     try: 
         memories_directory = "memory/"
