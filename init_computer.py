@@ -46,19 +46,21 @@ def first_start():
 
     computer.reply(f"Ok, lets set a custom MOTD! Again, just press 'enter' for the default MOTD.")
     MOTD = MOTD_question()
-    computer.custom_MOTD = True
+    computer.saving_state = True
 
     if MOTD["MOTD"] == "":
         computer.reply("Ok! Default MOTD it is!")
+        computer.custom_MOTD = False
         computer.saving_state = False
     else:
         computer.MOTD_text = MOTD["MOTD"]
+        computer.custom_MOTD = True
         computer.reply(f"Ok, '{computer.MOTD_text}' has been set as the MOTD!")
         computer.saving_state = False   
 
     computer.reply("Ok! Everything is now set!")
     computer.reply("Here is some useful information.")
-    computer.reply("I save titles and dates in in the two lines of each log.")
+    computer.reply("I save titles and dates in the top two lines of each log.")
     computer.reply("Dates are stored in the Julian time format.")
     computer.reply("All files are stored locally and no data is transmitted from this secure terminal, unless you make a system for it.")
     computer.reply("So, if you accidentally delete everything... I will literally lose my mind.")
@@ -77,10 +79,12 @@ def first_start():
         computer.reply("Got reply... I think I just started a war...")
 
     try: 
-        os.mkdir(computer.file_path)
+        if computer.file_path == "memory/":
+            os.mkdir(computer.file_path)
+
         os.mkdir(f"{computer.file_path}logs/")
         memories = {"name": f"{computer.name}",
-                "custom_enabled": computer.custom_MOTD,
+                "custom_MOTD_enabled": computer.custom_MOTD,
                 "custom_motd": f"{computer.MOTD_text}",
                 "editor": f"{computer.editor.lower()}",
                 "file_path": f"{computer.file_path}"}
