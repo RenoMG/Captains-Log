@@ -30,18 +30,19 @@ class computer_logic():
                 timer += 1
             else:
                 print(f"Data Saved!       ", end="\r")
+                print("\n")
 
 
     def reply(self, computer_msg):
         if self.saving_state:
             time.sleep(self.seconds)
             self.computer_saving_animation()
-            print("\n")
             text_string = ""
             for letter in computer_msg:
                 print(f"{text_string}{letter}", end="\r")
                 text_string += letter
                 time.sleep(self.typing_speed)
+            print("\n")
         else:
             time.sleep(self.seconds)
             text_string = ""
