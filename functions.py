@@ -13,6 +13,9 @@ class computer_logic():
         self.saving_state = False
         self.typing_speed = 0.1
         self.editor = None
+        self.file_path = "memory/"
+        self.custom_MOTD = False
+        self.MOTD_text = None
 
     def computer_loading_animation(self):
         loading_ch = ["⣾", "⣽", "⣻", "⢿", "⡿", "⣟", "⣯", "⣷", "⣾", "⣽", "⣻", "⢿", "⡿", "⣟", "⣯", "⣷", "⣾", "⣽", "⣻", "⢿", "⡿", "⣟", "⣯", "⣷", "⣾"]
@@ -107,17 +110,36 @@ def edit_log_choice():
     choice = inquirer.prompt(log_choice)
     return choice
 
-def about_website_question():
-    yes_or_no = [
-        inquirer.Confirm("choice", message="Y for Yes / N for No."),
-    ]
-
-    choice = inquirer.prompt(yes_or_no)
-    return choice
-
 def init_name_question():
     questions = [
         inquirer.Text(name="name", message="What is your name?"),
+    ]
+
+    answer = inquirer.prompt(questions)
+    print("\n")
+    return answer
+
+
+def init_file_path_question():
+    def file_path_validation(answer, current):
+        if len(current) == 0:
+            return True
+        elif os.path.isdir(f"{current}") == True:
+            return True
+        else:
+            return False
+
+    questions = [
+        inquirer.Text(name="file_path", message="Where to save my files?", validate=file_path_validation),
+    ]
+
+    answer = inquirer.prompt(questions)
+    print("\n")
+    return answer
+
+def MOTD_question():
+    questions = [
+        inquirer.Text(name="MOTD", message="What would you like the MOTD to be?"),
     ]
 
     answer = inquirer.prompt(questions)

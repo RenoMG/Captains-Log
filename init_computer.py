@@ -1,4 +1,4 @@
-from functions import convert_date_to_julian, computer_logic, init_bonus_question, general_question, editor_question, init_name_question
+from functions import convert_date_to_julian, computer_logic, init_bonus_question, editor_question, init_name_question, init_file_path_question, MOTD_question
 import json, sys, os
 
 def first_start():
@@ -14,35 +14,57 @@ def first_start():
         computer.saving_state = False
         computer.reply("Hmmm... I did not get a name. You must be from the tippy top and need to keep things... as they used to say 'Down Low'.")
         computer.reply("Since you did not give me a name, I will call you 'Captain'!")
-        computer.saving_state = False
+        computer.saving_state = True
         computer.name = "Captain"
 
     computer.reply(f"Nice to meet you, {computer.name}!")
     computer.saving_state = False
-    
+
+    computer.reply(f"Ok, {computer.name}. I don't have the functionality of a full text editor... I was never programmed with it.")
+    computer.reply(f"I am actually a prototype of the computer that is on Captain Archer's Ship, the Enterprise NX-01!")
+    computer.reply(f"And, well... All I can do is store Captain logs... yeah. BUT! WAIT! DON'T GO!")
+    computer.reply(f"All you have to do is choose an external editor on your system and I can use that!")
+    computer.saving_state = True
     get_editor = editor_question()
     computer.editor = get_editor["editor"]
     computer.reply(f"Ahh, {computer.editor}... nice!")
-    computer.reply("")
-
-    computer.reply(f"Well, {computer.name}! As you may have noticed... I am not as fast as the other systems you may have interacted with...")
-    computer.reply(f"I am a prototype of the computer that is on Captain Archer's Ship, the Enterprise NX-01!")
-    computer.reply(f"And, well... All I can do is store Captain logs... yeah. BUT! WAIT! DON'T GO!")
-    computer.reply(f"Writing Captain logs is FUNNNnnn... are you still here?")
-
-    still_here = general_question()
-    if still_here["choice"]:
-        computer.reply(f"HAHAHA, YES! I mean uhhh... glad to see you're still here {computer.name}")
-    else:
-        computer.reply(f"Awwww man... another one bites the dust... ;(")
-        computer.seconds = 1
-        sys.exit()
-
-    computer.reply(f"Ok! Well, enough for introductions. Let's go to the home screen!")
-    computer.reply("Let me save your file and get this thing going! I will make a template log for you at 'memory/logs/Heyyyooo'")
-
-    computer.reply("Please remember to not edit the Julian date and title position in the raw files, will make sorting annoying!")
     computer.saving_state = False
+
+    computer.reply(f"Ok! Now, where do you want me to save my system files?")
+    computer.reply(f"You can enter no path and press 'enter' on the question for the default save location.")
+    computer.reply(f"Please make sure you enter the absolute path")
+    computer.saving_state = True
+    file_path = init_file_path_question()
+
+    if file_path["file_path"] == "":
+        computer.reply(f"Ok, the default path will be used! File Path: '{computer.file_path}'.")
+        computer.saving_state = False
+    else:
+        computer.file_path = file_path["file_path"]
+        computer.reply(f"Ok, {computer.file_path} sounds good!")
+        computer.saving_state = False
+
+    computer.reply(f"Ok, lets set a custom MOTD! Again, just press 'enter' for the default MOTD.")
+    MOTD = MOTD_question()
+    computer.custom_MOTD = True
+
+    if MOTD["MOTD"] == "":
+        computer.reply("Ok! Default MOTD it is!")
+        computer.saving_state = False
+    else:
+        computer.MOTD_text = MOTD["MOTD"]
+        computer.reply(f"Ok, '{computer.MOTD_text}' has been set as the MOTD!")
+        computer.saving_state = False   
+
+    computer.reply("Ok! Everything is now set!")
+    computer.reply("Here is some useful information.")
+    computer.reply("I save titles and dates in in the two lines of each log.")
+    computer.reply("Dates are stored in the Julian time format.")
+    computer.reply("All files are stored locally and no data is transmitted from this secure terminal, unless you make a system for it.")
+    computer.reply("So, if you accidentally delete everything... I will literally lose my mind.")
+    computer.reply("Please remember to not edit the Julian date and title position in the raw files, will make sorting annoying!")
+    computer.reply(f"Ok! Well, enough for introductions. Let's go to the home screen!")
+
     computer.reply("OK! Are you ready to get this thing going?")
     go_home = init_bonus_question()
     if go_home['Yes']:
@@ -55,19 +77,19 @@ def first_start():
         computer.reply("Got reply... I think I just started a war...")
 
     try: 
-        memories_directory = "memory/"
-        logs_directory = "memory/logs/"
-        os.mkdir(memories_directory)
-        os.mkdir(logs_directory)
+        os.mkdir(computer.file_path)
+        os.mkdir(f"{computer.file_path}logs/")
         memories = {"name": f"{computer.name}",
-                "custom_motd": "None",
-                "editor": f"{computer.editor.lower()}"}
+                "custom_enabled": computer.custom_MOTD,
+                "custom_motd": f"{computer.MOTD_text}",
+                "editor": f"{computer.editor.lower()}",
+                "file_path": f"{computer.file_path}"}
 
-        with open("memory/memories.json", "w") as f:
+        with open(f"{computer.file_path}memories.json", "w") as f:
             json.dump(memories, f, indent=4)
 
         get_date_conversion = convert_date_to_julian()
-        with open("memory/logs/Heyyyooo.txt", "w") as f:
+        with open(f"{computer.file_path}logs/Heyyyooo.txt", "w") as f:
             f.write(f"Julian Date: {get_date_conversion} \n")
             f.write("Title: Heyyyooo\n\n")
             f.write("Start of Captains Log:\n")
