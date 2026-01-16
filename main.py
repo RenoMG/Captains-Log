@@ -1,4 +1,4 @@
-from init_computer import first_start
+from first_start import first_start
 import os
 
 def main():
