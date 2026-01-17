@@ -1,60 +1,12 @@
 from astropy.time import Time
 from datetime import date
-import time, inquirer, os
+import inquirer, os
 
 def convert_date_to_julian():
     normal_date = date.today()
     return str(Time(str(normal_date)).jd)
 
-class computer_logic():
-    def __init__(self):
-        self.name = "Captain"
-        self.seconds = 1.5
-        self.saving_state = False
-        self.typing_speed = 0.1
-        self.editor = None
-        self.file_path = "memory/"
-        self.custom_MOTD = False
-        self.MOTD_text = None
-
-    def computer_loading_animation(self):
-        loading_ch = ["⣾", "⣽", "⣻", "⢿", "⡿", "⣟", "⣯", "⣷", "⣾", "⣽", "⣻", "⢿", "⡿", "⣟", "⣯", "⣷", "⣾", "⣽", "⣻", "⢿", "⡿", "⣟", "⣯", "⣷", "⣾"]
-        for ch in loading_ch:
-            print(f"{ch} Loading", end="\r")
-            time.sleep(0.1)
-
-    def computer_saving_animation(self):
-        saving_ch = ["⣾", "⣽", "⣻", "⢿", "⡿", "⣟", "⣯", "⣷", "⣾", "⣽", "⣻", "⢿", "⡿", "⣟", "⣯", "⣷", "⣾", "⣽", "⣻", "⢿", "⡿", "⣟", "⣯", "⣷", "⣾"]
-        timer = 0
-        for ch in saving_ch:
-            if timer != 24:
-                print(f"{ch} Saving Data", end="\r")
-                time.sleep(0.1)
-                timer += 1
-            else:
-                print(f"Data Saved!       ", end="\r")
-                print("\n")
-
-
-    def reply(self, computer_msg):
-        if self.saving_state:
-            time.sleep(self.seconds)
-            self.computer_saving_animation()
-            text_string = ""
-            for letter in computer_msg:
-                print(f"{text_string}{letter}", end="\r")
-                text_string += letter
-                time.sleep(self.typing_speed)
-            print("\n")
-        else:
-            time.sleep(self.seconds)
-            text_string = ""
-            for letter in computer_msg:
-                print(f"{text_string}{letter}", end="\r")
-                text_string += letter
-                time.sleep(self.typing_speed)
-            print("\n")
-
+# First boot only functions
 def init_bonus_question():
     yes_or_no = [
         inquirer.Confirm("Yes", message="Y for home screen / N for Romulans(ANGRY VULCANS) attack"),
@@ -63,6 +15,8 @@ def init_bonus_question():
     choice = inquirer.prompt(yes_or_no)
     return choice
 
+
+# General functions used in multiple places
 def editor_question():
     editor_choice = [
         inquirer.List(
@@ -75,7 +29,7 @@ def editor_question():
     choice = inquirer.prompt(editor_choice)
     return choice
 
-def general_question():
+def yes_or_no_question():
     yes_or_no = [
         inquirer.Confirm("choice", message="Y for Yes / N for No."),
     ]
@@ -110,7 +64,7 @@ def edit_log_choice():
     choice = inquirer.prompt(log_choice)
     return choice
 
-def init_name_question():
+def name_question():
     questions = [
         inquirer.Text(name="name", message="What is your name?"),
     ]

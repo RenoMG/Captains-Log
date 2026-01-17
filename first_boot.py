@@ -1,13 +1,14 @@
-from functions import convert_date_to_julian, computer_logic, init_bonus_question, editor_question, init_name_question, init_file_path_question, MOTD_question
-import json, sys, os
+import json, os
+from functions import *
+from classes import computer_logic
 
-def first_start():
+def init_computer():
     computer = computer_logic()
     computer.reply("Welcome Captain! Looks like this is your first time here!")
     computer.reply("Let's begin the setup process!")
     computer.reply("I will now ask you some questions to get started! Let's start with your name")
-    name_question = init_name_question()
-    computer.name = name_question["name"]
+    name_answer = name_question()
+    computer.name = name_answer["name"]
     computer.saving_state = True
 
     if computer.name == "":
@@ -31,7 +32,7 @@ def first_start():
     computer.saving_state = False
 
     computer.reply(f"Ok! Now, where do you want me to save my system files?")
-    computer.reply(f"You can enter no path and press 'enter' on the question for the default save location.")
+    computer.reply(f"You can just press 'enter' on the question for the default save location.")
     computer.reply(f"Please make sure you enter the absolute path")
     computer.saving_state = True
     file_path = init_file_path_question()
@@ -39,6 +40,7 @@ def first_start():
     if file_path["file_path"] == "":
         computer.reply(f"Ok, the default path will be used! File Path: '{computer.file_path}'.")
         computer.saving_state = False
+        computer.reply("Keep in mind the default storage path is in whatever location you initialized me!")
     else:
         computer.file_path = file_path["file_path"]
         computer.reply(f"Ok, {computer.file_path} sounds good!")
