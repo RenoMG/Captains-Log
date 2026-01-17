@@ -27,7 +27,11 @@ def init_computer():
     computer.reply(f"All you have to do is choose an external editor on your system and I can use that!")
     computer.saving_state = True
     get_editor = editor_question()
-    computer.editor = get_editor["editor"]
+    
+    if get_editor["editor"] == "Neovim":
+        computer.editor = "nvim"
+    else:
+        computer.editor = get_editor["editor"]
     computer.reply(f"Ahh, {computer.editor}... nice!")
     computer.saving_state = False
 
