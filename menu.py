@@ -1,50 +1,60 @@
-from functions import convert_date_to_julian, computer_logic, general_question, editor_question, menu_choice, edit_log_choice, about_website_question
-import json, sys, os, random, subprocess, webbrowser
-log_directory = "memory/logs"
+import json, os, random, subprocess, webbrowser
+from functions import *
+from classes import computer_logic
 
-#Load Captain memories
-with open("memory/memories.json", "r") as f:
-    data = json.load(f)
+# Load Computer Config Into Memory From File
+try: 
+    with open("storage/config.json", "r") as f:
+        data = json.load(f)
 
-    computer = computer_logic(data["name"], 2, False, data["editor"])
+        computer = computer_logic()
+        computer.name = data["name"]
+        computer.custom_MOTD = data["custom_MOTD_enabled"]
+        computer.MOTD_text = data["custom_motd"]
+        computer.editor = data["editor"]
+        computer.logs_location = data["logs_location"]
+except Exception as e:
+    print(f"Oops! I cannot load my system config! ERROR:{e}")
 
-#Load MOTD
-with open("motd.json", "r") as f:
-    motd = json.load(f)
+# Don't load MOTD file if Custom MOTD is enabled
+if computer.custom_MOTD == False:
+    with open("motd.json", "r") as f:
+        motd = json.load(f)
 
 def menu_init():
-    computer.computer_reply(f"Hello {computer.name}! It's nice to see you again!")
-    computer.computer_reply(f"Let me load the menu and get everything going!")
+    computer.reply(f"Hello {computer.name}! It's nice to see you again!")
+    computer.reply(f"Let me load the menu and get everything going!")
     os.system("clear")
     menu()
 
 def menu():
     os.system("clear")
-    computer.thinking_output = False
-    get_motd = motd[random.randrange(3)]
+    if computer.custom_MOTD == False:
+        get_motd = motd[random.randrange(len(motd))]
+    else: 
+        get_motd = computer.custom_MOTD
     motd_name = computer.name
-    computer.computer_reply("MOTD: " + get_motd.format(captain_name=motd_name))
+    computer.reply("MOTD: " + get_motd.format(captain_name=motd_name))
     get_choice = menu_choice()
-    computer.thinking_output = True
 
     if get_choice["menu"] == "Create Log":
         os.system("clear")
-        title = input("What should the title be? - ")
+        title = create_log_question()
         try: 
-            if os.path.exists(f"memory/logs/{title}.txt") == True:
-                computer.computer_reply("A log with that name already exists, opening it now!")
+            if os.path.exists(f"{computer.logs_location}{title["log_name"]}.txt") == True:
+                computer.reply("A log with that name already exists, opening it now!")
 
             get_date_conversion = convert_date_to_julian()
-            with open(f"memory/logs/{title}.txt", "w") as f:
+            with open(f"{computer.logs_location}{title["log_name"]}.txt", "w") as f:
                 f.write(f"Julian Date: {get_date_conversion} \n")
-                f.write(f"Title: {title}\n\n")
+                f.write(f"Title: {title["log_name"]}\n\n")
 
         except Exception as e:
             print(f"Uh oh.. something went wrong... I was not able to create the log! ERROR: {e}")
 
-        computer.computer_reply(f"The log has been created, {computer.name}! Time to get typing!")
+        computer.reply(f"The log has been created, {computer.name}! Time to get typing!")
         
-        process = subprocess.Popen([computer.editor, f"memory/logs/{title}.txt"])
+        process = subprocess.Popen([computer.editor, f"{computer.logs_location}{title["log_name"]}.txt"])
         process.wait()
         os.system("clear")
         menu()

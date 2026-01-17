@@ -73,6 +73,21 @@ def name_question():
     print("\n")
     return answer
 
+def create_log_question():
+    def log_name_validation(answer, current):
+        if len(current) == 0:
+            return False
+        else:
+            return True
+
+    questions = [
+        inquirer.Text(name="log_name", message="Type a name for your log!", validate=log_name_validation),
+    ]
+
+    answer = inquirer.prompt(questions)
+    print("\n")
+    return answer
+
 
 def init_logs_location_question():
     def logs_location_validation(answer, current):
