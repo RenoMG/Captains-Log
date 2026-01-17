@@ -1,35 +1,13 @@
 from astropy.time import Time
 from datetime import date
-import time, inquirer, os
+import inquirer, os, json
 
 def convert_date_to_julian():
     normal_date = date.today()
     return str(Time(str(normal_date)).jd)
 
-class computer_logic():
-    def __init__(self, name, seconds, saving_state, editor):
-        self.name = name
-        self.seconds = seconds
-        self.saving_state = saving_state
-        self.editor = editor
-        self.thinking_output = True
-
-    def computer_reply(self, computer_msg):
-        if self.thinking_output == False:
-            return print(computer_msg)
-
-        if self.saving_state:
-            time.sleep(self.seconds)
-            print("Computer is saving data...")
-            time.sleep(self.seconds)
-            print(computer_msg)
-        else:
-            print("Computer is thinking...")
-            time.sleep(self.seconds)
-            print(computer_msg)
-            time.sleep(self.seconds)
-
-def init_question():
+# First boot only functions
+def init_bonus_question():
     yes_or_no = [
         inquirer.Confirm("Yes", message="Y for home screen / N for Romulans(ANGRY VULCANS) attack"),
     ]
@@ -37,6 +15,8 @@ def init_question():
     choice = inquirer.prompt(yes_or_no)
     return choice
 
+
+# General functions used in multiple places
 def editor_question():
     editor_choice = [
         inquirer.List(
@@ -49,7 +29,7 @@ def editor_question():
     choice = inquirer.prompt(editor_choice)
     return choice
 
-def general_question():
+def yes_or_no_question():
     yes_or_no = [
         inquirer.Confirm("choice", message="Y for Yes / N for No."),
     ]
@@ -70,7 +50,9 @@ def menu_choice():
     return choice
 
 def edit_log_choice():
-    log_directory = "memory/logs"
+    with open("storage/config.json", "r") as f:
+        data = json.load(f)
+    log_directory = data["logs_location"]
     log_files = [file for file in os.listdir(log_directory)]
 
     log_choice = [
@@ -84,10 +66,53 @@ def edit_log_choice():
     choice = inquirer.prompt(log_choice)
     return choice
 
-def about_website_question():
-    yes_or_no = [
-        inquirer.Confirm("choice", message="Y for Yes / N for No."),
+def name_question():
+    questions = [
+        inquirer.Text(name="name", message="What is your name?"),
     ]
 
-    choice = inquirer.prompt(yes_or_no)
-    return choice
+    answer = inquirer.prompt(questions)
+    print("\n")
+    return answer
+
+def create_log_question():
+    def log_name_validation(answer, current):
+        if len(current) == 0:
+            return False
+        else:
+            return True
+
+    questions = [
+        inquirer.Text(name="log_name", message="Type a name for your log!", validate=log_name_validation),
+    ]
+
+    answer = inquirer.prompt(questions)
+    print("\n")
+    return answer
+
+
+def init_logs_location_question():
+    def logs_location_validation(answer, current):
+        if len(current) == 0:
+            return True
+        elif os.path.isdir(f"{current}") == True:
+            return True
+        else:
+            return False
+
+    questions = [
+        inquirer.Text(name="logs_location", message="Where to save your logs?", validate=logs_location_validation),
+    ]
+
+    answer = inquirer.prompt(questions)
+    print("\n")
+    return answer
+
+def MOTD_question():
+    questions = [
+        inquirer.Text(name="MOTD", message="What would you like the MOTD to be?"),
+    ]
+
+    answer = inquirer.prompt(questions)
+    print("\n")
+    return answer
