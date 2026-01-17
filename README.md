@@ -4,7 +4,7 @@ A place to write your Captain's Log in The Terminal. Directly Inspired By Star T
 # WIP
 !! This is a work in progress and still in the creation stage !!
 
-Currently the project is usable but may have various bugs, I will add a installation and operations guide after
+Currently the project is usable but may have various bugs, I will add an installation and operations guide after
 I feel that the project is in a state that is acceptable to me.
 
 Feel free to mess around!
