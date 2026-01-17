@@ -76,22 +76,22 @@ def menu():
 
     if get_choice["menu"] == "Quit":
         os.system("clear")
-        computer.computer_reply(f"Awhhhh mannnn... ok {computer.name}! See you next time!")
+        computer.reply(f"Awhhhh mannnn... ok {computer.name}! See you next time!")
         quit()
 
     if get_choice["menu"] == "List logs":
         os.system("clear")
-        file_list = [file for file in os.listdir(log_directory)]
+        file_list = [file for file in os.listdir(computer.logs_location)]
         print(f"Total Logs: {len(file_list)}")
 
         for file in file_list:
-            with open(f"{log_directory}/{file}") as f: 
+            with open(f"{computer.logs_location}{file}") as f: 
                 julian_date = f.readline().strip("Julian Date: ").strip(" \n")
 
-            with open(f"{log_directory}/{file}") as f: 
-                title_name = f.readlines()[1].strip("Title: ").strip(" \n")
+            with open(f"{computer.logs_location}{file}") as f: 
+                title_name = f.readlines()[1].strip(" \n")
 
-            print(f"-- \nFile Name: {file},\nTitle: {title_name},\nCreation Date: {julian_date}")
+            print(f"-- \nFile Name: {file},\n{title_name},\nCreation Date: {julian_date}")
             
         input("--\nPress Enter to close.")
         menu()
