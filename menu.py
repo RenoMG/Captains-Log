@@ -133,18 +133,18 @@ def menu():
 
     if get_choice["menu"] == "About":
         os.system("clear")
-        computer.computer_reply(f"Welcome to the about page!")
-        computer.computer_reply(f"This program was made by Reno! A beginner programmer!")
-        computer.computer_reply(f"I love watching Star Trek and thought this would be fun to make at my skill level!")
-        computer.computer_reply(f"Would you like to visit my website?")
+        computer.reply(f"Welcome to the about page!")
+        computer.reply(f"This program was made by Reno! A beginner programmer!")
+        computer.reply(f"I love watching Star Trek and thought this would be fun to make at my skill level!")
+        computer.reply(f"Would you like to visit my website?")
 
-        visit_website = about_website_question()
+        visit_website = yes_or_no_question()
         if visit_website["choice"]:
             try: 
                 webbrowser.open("https://renos.world", new=0, autoraise=True)
                 raise RuntimeError("RuntimeError")
             except Exception as e:
-                input(f"Error: {e}, are you using a headless setup like WSL? ")
+                input(f"Error: {e}, are you using a headless setup like WSL? Press enter to return to the menu.")
         else:
             computer.computer_reply(input(f"Ah... ok... Well! Press any key to return to the menu!"))
 
