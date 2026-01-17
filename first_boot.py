@@ -31,20 +31,24 @@ def init_computer():
     computer.reply(f"Ahh, {computer.editor}... nice!")
     computer.saving_state = False
 
-    computer.reply(f"Ok! Now, where do you want me to save my system files?")
+    computer.reply(f"Ok! Now, where do you want me to save your log's, {computer.name}?")
     computer.reply(f"You can just press 'enter' on the question for the default save location.")
     computer.reply(f"Please make sure you enter the absolute path")
     computer.saving_state = True
-    file_path = init_file_path_question()
+    logs_location = init_logs_location_question()
 
-    if file_path["file_path"] == "":
-        computer.reply(f"Ok, the default path will be used! File Path: '{computer.file_path}'.")
+    if logs_location["logs_location"] == "":
+        computer.reply(f"Ok, the default path will be used! File Path: '{computer.logs_location}'.")
         computer.saving_state = False
-        computer.reply("Keep in mind the default storage path is in whatever location you initialized me!")
     else:
-        computer.file_path = file_path["file_path"]
-        computer.reply(f"Ok, {computer.file_path} sounds good!")
-        computer.saving_state = False
+        if logs_location["logs_location"].endswith('/'):
+            computer.logs_location = logs_location["logs_location"]
+            computer.reply(f"Ok, {computer.logs_location} sounds good!")
+            computer.saving_state = False
+        else:
+            computer.logs_location = logs_location["logs_location"] + "/"
+            computer.reply(f"Ok, {computer.logs_location} sounds good!")
+            computer.saving_state = False
 
     computer.reply(f"Ok, lets set a custom MOTD! Again, just press 'enter' for the default MOTD.")
     MOTD = MOTD_question()
@@ -81,21 +85,20 @@ def init_computer():
         computer.reply("Got reply... I think I just started a war...")
 
     try: 
-        if computer.file_path == "memory/":
-            os.mkdir(computer.file_path)
-
-        os.mkdir(f"{computer.file_path}logs/")
-        memories = {"name": f"{computer.name}",
+        os.mkdir("storage/")
+        config = {"name": f"{computer.name}",
                 "custom_MOTD_enabled": computer.custom_MOTD,
                 "custom_motd": f"{computer.MOTD_text}",
                 "editor": f"{computer.editor.lower()}",
-                "file_path": f"{computer.file_path}"}
+                "logs_location": f"{computer.logs_location}"}
 
-        with open(f"{computer.file_path}memories.json", "w") as f:
-            json.dump(memories, f, indent=4)
+        with open(f"storage/config.json", "w") as f:
+            json.dump(config, f, indent=4)
+
+        os.mkdir(f"{computer.logs_location}")
 
         get_date_conversion = convert_date_to_julian()
-        with open(f"{computer.file_path}logs/Heyyyooo.txt", "w") as f:
+        with open(f"{computer.logs_location}Heyyyooo.txt", "w") as f:
             f.write(f"Julian Date: {get_date_conversion} \n")
             f.write("Title: Heyyyooo\n\n")
             f.write("Start of Captains Log:\n")

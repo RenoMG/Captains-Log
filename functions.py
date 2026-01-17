@@ -74,8 +74,8 @@ def name_question():
     return answer
 
 
-def init_file_path_question():
-    def file_path_validation(answer, current):
+def init_logs_location_question():
+    def logs_location_validation(answer, current):
         if len(current) == 0:
             return True
         elif os.path.isdir(f"{current}") == True:
@@ -84,7 +84,7 @@ def init_file_path_question():
             return False
 
     questions = [
-        inquirer.Text(name="file_path", message="Where to save my files?", validate=file_path_validation),
+        inquirer.Text(name="logs_location", message="Where to save your logs?", validate=logs_location_validation),
     ]
 
     answer = inquirer.prompt(questions)

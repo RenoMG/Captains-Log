@@ -7,7 +7,7 @@ class computer_logic():
         self.saving_state = False
         self.typing_speed = 0.1
         self.editor = None
-        self.file_path = "memory/"
+        self.logs_location = "storage/logs/"
         self.custom_MOTD = False
         self.MOTD_text = None
 
