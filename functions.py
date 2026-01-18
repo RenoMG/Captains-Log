@@ -116,3 +116,28 @@ def MOTD_question():
     answer = inquirer.prompt(questions)
     print("\n")
     return answer
+
+
+# Settings questions
+# Some questions need to be modified and changed to be only used in this specific portion 
+def settings_page():
+    setting_choice = [
+        inquirer.List(
+            "setting",
+            message="Please choose a value to change!",
+            choices=["Name", "Editor", "Logs Location", "Custom MOTD"],
+        )
+    ]
+
+    choice = inquirer.prompt(setting_choice)
+    return choice
+
+def name_change():
+    questions = [
+        inquirer.Text(name="name", message="What would you like to change your name to?"),
+    ]
+
+    answer = inquirer.prompt(questions)
+    print("\n")
+    return answer
+    

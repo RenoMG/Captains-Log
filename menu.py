@@ -150,6 +150,29 @@ def menu():
 
         os.system("clear")
         menu()
-    
+
+    if get_choice["menu"] == "Edit settings":
+        os.system("clear")
+        computer.reply(f"Let me load the settings page!")
+        computer.computer_loading_animation()
+        computer.reply(f"Here are all the available settings!")
+        setting_choice = settings_page()
+
+        if setting_choice["setting"] == "Name":
+            computer.reply(f"Current Name Value: {computer.name}")
+            new_name = name_change()
+            if new_name["name"] == "":
+                computer.reply("Ok! Back to the default name it is, Capitan!")
+                computer.computer_saving_animation()
+            else:
+                computer.name = new_name["name"]
+                computer.reply(f"Ok! Your name has been change to {computer.name}!")
+                data["name"] = computer.name
+                with open(f"storage/config.json", "w") as f:
+                    json.dump(data, f, indent=4)
+                computer.computer_saving_animation()
+            computer.reply("Returning to the menu")
+            os.system("clear")
+            menu()
 
 

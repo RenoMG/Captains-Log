@@ -13,9 +13,15 @@ class computer_logic():
 
     def computer_loading_animation(self):
         loading_ch = ["⣾", "⣽", "⣻", "⢿", "⡿", "⣟", "⣯", "⣷", "⣾", "⣽", "⣻", "⢿", "⡿", "⣟", "⣯", "⣷", "⣾", "⣽", "⣻", "⢿", "⡿", "⣟", "⣯", "⣷", "⣾"]
+        timer = 0
         for ch in loading_ch:
-            print(f"{ch} Loading", end="\r")
-            time.sleep(0.1)
+            if timer != 24:
+                print(f"{ch} Loading Data", end="\r")
+                time.sleep(0.1)
+                timer += 1
+            else:
+                print(f"Data Loaded!       ", end="\r")
+                print("\n")
 
     def computer_saving_animation(self):
         saving_ch = ["⣾", "⣽", "⣻", "⢿", "⡿", "⣟", "⣯", "⣷", "⣾", "⣽", "⣻", "⢿", "⡿", "⣟", "⣯", "⣷", "⣾", "⣽", "⣻", "⢿", "⡿", "⣟", "⣯", "⣷", "⣾"]
