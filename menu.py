@@ -23,7 +23,7 @@ if computer.custom_MOTD == False:
 
 def menu_init():
     computer.reply(f"Hello {computer.name}! It's nice to see you again!")
-    computer.reply(f"Let me load the menu and get everything going!")
+    computer.computer_loading_animation()
     os.system("clear")
     menu()
 
@@ -162,7 +162,10 @@ def menu():
             computer.reply(f"Current Name Value: {computer.name}")
             new_name = name_change()
             if new_name["name"] == "":
-                computer.reply("Ok! Back to the default name it is, Capitan!")
+                computer.reply("Ok! Back to the default name it is, Captain!")
+                data["name"] = "Captain"
+                with open(f"storage/config.json", "w") as f:
+                    json.dump(data, f, indent=4)
                 computer.computer_saving_animation()
             else:
                 computer.name = new_name["name"]
