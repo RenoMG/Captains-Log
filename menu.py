@@ -147,7 +147,7 @@ def menu():
             except Exception as e:
                 input(f"Error: {e}, are you using a headless setup like WSL? Press enter to return to the menu.")
         else:
-            computer.computer_reply(input(f"Ah... ok... Well! Press any key to return to the menu!"))
+            computer.reply(input(f"Ah... ok... Well! Press any key to return to the menu!"))
 
         os.system("clear")
         menu()
