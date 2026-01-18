@@ -153,7 +153,6 @@ def menu():
 
     if get_choice["menu"] == "Edit settings":
         os.system("clear")
-        computer.reply(f"Let me load the settings page!")
         computer.computer_loading_animation()
         computer.reply(f"Here are all the available settings!")
         setting_choice = settings_page()
@@ -175,6 +174,21 @@ def menu():
                     json.dump(data, f, indent=4)
                 computer.computer_saving_animation()
             computer.reply("Returning to the menu")
+            os.system("clear")
+            menu()
+
+        if setting_choice["setting"] == "Editor":
+            computer.reply(f"Current Editor Value: {computer.editor}")
+            new_editor = editor_question()
+            computer.reply(f"Ok! Editor has now been changed to {new_editor["editor"]}!")
+            if new_editor["editor"] == "Neovim":
+                computer.editor = "nvim"
+            else:
+                computer.editor = new_editor["editor"].lower()
+            data["editor"] = computer.editor
+            with open(f"storage/config.json", "w") as f:
+                    json.dump(data, f, indent=4)
+            computer.computer_saving_animation()
             os.system("clear")
             menu()
 
