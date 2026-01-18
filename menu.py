@@ -192,4 +192,34 @@ def menu():
             os.system("clear")
             menu()
 
+        if setting_choice["setting"] == "Logs Location":
+            computer.reply(f"Current Logs Location: {computer.logs_location}")
+            computer.reply("Please remember, when you change the logs location you will have to move all your current logs to the new location!")
+            new_logs_location = init_logs_location_question()
+            if new_logs_location["logs_location"] == "":
+                computer.logs_location = "storage/logs/"
+                computer.reply(f"Ok, the default path will be used! File Path: '{computer.logs_location}'.")
+                data["logs_location"] = computer.logs_location
+                with open(f"storage/config.json", "w") as f:
+                    json.dump(data, f, indent=4)
+                computer.computer_saving_animation()
+            else:
+                if new_logs_location["logs_location"].endswith('/'):
+                    computer.logs_location = new_logs_location["logs_location"]
+                    computer.reply(f"Ok, {computer.logs_location} sounds good!")
+                    data["logs_location"] = computer.logs_location
+                    with open(f"storage/config.json", "w") as f:
+                        json.dump(data, f, indent=4)                    
+                    computer.computer_saving_animation()
+                else:
+                    computer.logs_location = new_logs_location["logs_location"] + "/"
+                    computer.reply(f"Ok, {computer.logs_location} sounds good!")
+                    data["logs_location"] = computer.logs_location
+                    with open(f"storage/config.json", "w") as f:
+                        json.dump(data, f, indent=4)    
+                    computer.computer_saving_animation()          
+
+            os.system("clear")
+            menu()
+
 
