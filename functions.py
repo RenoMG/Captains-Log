@@ -141,3 +141,11 @@ def name_change():
     print("\n")
     return answer
     
+def change_MOTD_question():
+    questions = [
+        inquirer.Text(name="MOTD", message="What would you like the MOTD to be changed to?"),
+    ]
+
+    answer = inquirer.prompt(questions)
+    print("\n")
+    return answer

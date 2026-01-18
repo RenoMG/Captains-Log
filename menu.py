@@ -16,11 +16,6 @@ try:
 except Exception as e:
     print(f"Oops! I cannot load my system config! ERROR:{e}")
 
-# Don't load MOTD file if Custom MOTD is enabled
-if computer.custom_MOTD == False:
-    with open("motd.json", "r") as f:
-        motd = json.load(f)
-
 def menu_init():
     computer.reply(f"Hello {computer.name}! It's nice to see you again!")
     computer.computer_loading_animation()
@@ -29,10 +24,16 @@ def menu_init():
 
 def menu():
     os.system("clear")
+
+    # Don't load MOTD file if Custom MOTD is enabled
+    if computer.custom_MOTD == False:
+        with open("motd.json", "r") as f:
+            motd = json.load(f)
+
     if computer.custom_MOTD == False:
         get_motd = motd[random.randrange(len(motd))]
     else: 
-        get_motd = computer.custom_MOTD
+        get_motd = computer.MOTD_text
     motd_name = computer.name
     computer.reply("MOTD: " + get_motd.format(captain_name=motd_name))
     get_choice = menu_choice()
@@ -218,8 +219,31 @@ def menu():
                     with open(f"storage/config.json", "w") as f:
                         json.dump(data, f, indent=4)    
                     computer.computer_saving_animation()          
-
             os.system("clear")
             menu()
 
+        if setting_choice["setting"] == "Custom MOTD":
+            computer.reply(f"Current MOTD Values: Custom Enabled: {computer.custom_MOTD}, MOTD Text: {computer.MOTD_text}")
+            computer.reply("Use {captain_name} to place name in MOTD!")
+            new_custom_MOTD = change_MOTD_question()
+            if new_custom_MOTD["MOTD"] == "":
+                computer.reply("No value was given, default MOTD it is!")
+                computer.custom_MOTD = False
+                computer.MOTD_text = None
+                data["custom_MOTD_enabled"] = computer.custom_MOTD
+                data["custom_motd"] = computer.MOTD_text
+                with open(f"storage/config.json", "w") as f:
+                    json.dump(data, f, indent=4)
+                computer.computer_saving_animation()
+            else:
+                computer.reply(f"Custom MOTD has been set to {new_custom_MOTD["MOTD"]}")
+                computer.custom_MOTD = True
+                computer.MOTD_text = new_custom_MOTD["MOTD"]
+                data["custom_MOTD_enabled"] = computer.custom_MOTD
+                data["custom_motd"] = computer.MOTD_text
+                with open(f"storage/config.json", "w") as f:
+                    json.dump(data, f, indent=4)
+                computer.computer_saving_animation()
+            os.system("clear")
+            menu()
 
