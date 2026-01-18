@@ -90,6 +90,7 @@ def init_computer():
 
     try: 
         os.mkdir("storage/")
+        os.mkdir("storage/logs/")
         config = {"name": f"{computer.name}",
                 "custom_MOTD_enabled": computer.custom_MOTD,
                 "custom_motd": f"{computer.MOTD_text}",
@@ -98,8 +99,6 @@ def init_computer():
 
         with open(f"storage/config.json", "w") as f:
             json.dump(config, f, indent=4)
-
-        os.mkdir(f"{computer.logs_location}")
 
         get_date_conversion = convert_date_to_julian()
         with open(f"{computer.logs_location}Heyyyooo.txt", "w") as f:
