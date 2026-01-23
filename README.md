@@ -22,7 +22,7 @@ Feel free to mess around!
 4. Enter Directory: ``cd Captains-Log``
 5. Sync UV: ``uv sync``
 6. Enter UV virtual environment: ``source .venv/bin/activate``
-7. Run Program: ``python3 main.py or uv run main.py``
+7. Run Program: ``uv run main.py``
 
 ## Details
 
