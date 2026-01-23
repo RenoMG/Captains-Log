@@ -82,12 +82,12 @@ def menu():
 
         for file in file_list:
             with open(f"{computer.logs_location}{file}") as f: 
-                julian_date = f.readline().strip("Julian Date: ").strip(" \n")
+                julian_date = f.readline().removeprefix("Julian Date: ").strip(" \n")
 
             with open(f"{computer.logs_location}{file}") as f: 
-                title_name = f.readlines()[1].strip(" \n")
+                title_name = f.readlines()[1].removeprefix("Title: ").strip(" \n")
 
-            print(f"-- \nFile Name: {file},\n{title_name},\nCreation Date: {julian_date}")
+            print(f"-- \nFile Name: {file},\nTitle: {title_name},\nCreation Date: {julian_date}")
             
         input("--\nPress Enter to close.")
         menu()
