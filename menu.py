@@ -37,20 +37,20 @@ def menu():
         os.system("clear")
         title = create_log_question()
         try: 
-            if os.path.exists(f"{computer.logs_location}{title["log_name"]}.txt") == True:
+            if os.path.exists(f"{computer.logs_location}{title['log_name']}.txt") == True:
                 computer.reply("A log with that name already exists, opening it now!")
 
             get_date_conversion = convert_date_to_julian()
-            with open(f"{computer.logs_location}{title["log_name"]}.txt", "w") as f:
+            with open(f"{computer.logs_location}{title['log_name']}.txt", "w") as f:
                 f.write(f"Julian Date: {get_date_conversion} \n")
-                f.write(f"Title: {title["log_name"]}\n\n")
+                f.write(f"Title: {title['log_name']}\n\n")
 
         except Exception as e:
             print(f"Uh oh.. something went wrong... I was not able to create the log! ERROR: {e}")
 
         computer.reply(f"The log has been created, {computer.name}! Time to get typing!")
         
-        process = subprocess.Popen([computer.editor, f"{computer.logs_location}{title["log_name"]}.txt"])
+        process = subprocess.Popen([computer.editor, f"{computer.logs_location}{title['log_name']}.txt"])
         process.wait()
         os.system("clear")
         menu()
@@ -59,7 +59,7 @@ def menu():
         os.system("clear")
         computer.reply(f"Ok, here is all of the logs you have. Please select one to edit!")
         log_to_edit = edit_log_choice()
-        computer.reply(f"Ok, opening {log_to_edit["logs"]}")
+        computer.reply(f"Ok, opening {log_to_edit['logs']}")
 
         try: 
             process = subprocess.Popen([computer.editor, f"{computer.logs_location}{log_to_edit["logs"]}"])
@@ -174,7 +174,7 @@ def menu():
         if setting_choice["setting"] == "Editor":
             computer.reply(f"Current Editor Value: {computer.editor}")
             new_editor = editor_question()
-            computer.reply(f"Ok! Editor has now been changed to {new_editor["editor"]}!")
+            computer.reply(f"Ok! Editor has now been changed to {new_editor['editor']}!")
             if new_editor["editor"] == "Neovim":
                 computer.editor = "nvim"
             else:
@@ -224,7 +224,7 @@ def menu():
                 config_json_write(config_data)
                 computer.computer_saving_animation()
             else:
-                computer.reply(f"Custom MOTD has been set to {new_custom_MOTD["MOTD"]}")
+                computer.reply(f"Custom MOTD has been set to {new_custom_MOTD['MOTD']}")
                 computer.custom_MOTD = True
                 computer.MOTD_text = new_custom_MOTD["MOTD"]
                 config_data["custom_MOTD_enabled"] = computer.custom_MOTD
