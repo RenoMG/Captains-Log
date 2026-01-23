@@ -6,6 +6,14 @@ def convert_date_to_julian():
     normal_date = date.today()
     return str(Time(str(normal_date)).jd)
 
+def config_json_read(config_data):
+    with open("storage/config.json", "r") as f:
+        config_data = json.load(f)
+
+def config_json_write(config_data):
+    with open(f"storage/config.json", "w") as f:
+        json.dump(config_data, f, indent=4)
+
 # First boot only functions
 def init_bonus_question():
     yes_or_no = [

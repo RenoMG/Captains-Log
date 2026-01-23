@@ -1,20 +1,15 @@
 import json, os, random, subprocess, webbrowser
 from functions import *
 from classes import computer_logic
+from data_loader import config_data
 
-# Load Computer Config Into Memory From File
-try: 
-    with open("storage/config.json", "r") as f:
-        data = json.load(f)
-
-        computer = computer_logic()
-        computer.name = data["name"]
-        computer.custom_MOTD = data["custom_MOTD_enabled"]
-        computer.MOTD_text = data["custom_motd"]
-        computer.editor = data["editor"]
-        computer.logs_location = data["logs_location"]
-except Exception as e:
-    print(f"Oops! I cannot load my system config! ERROR:{e}")
+# Setup Instance Variables for the menu
+computer = computer_logic()
+computer.name = config_data["name"]
+computer.custom_MOTD = config_data["custom_MOTD_enabled"]
+computer.MOTD_text = config_data["custom_motd"]
+computer.editor = config_data["editor"]
+computer.logs_location = config_data["logs_location"]
 
 def menu_init():
     computer.reply(f"Hello {computer.name}! It's nice to see you again!")
@@ -163,16 +158,14 @@ def menu():
             new_name = name_change()
             if new_name["name"] == "":
                 computer.reply("Ok! Back to the default name it is, Captain!")
-                data["name"] = "Captain"
-                with open(f"storage/config.json", "w") as f:
-                    json.dump(data, f, indent=4)
+                config_data["name"] = "Captain"
+                config_json_write(config_data)
                 computer.computer_saving_animation()
             else:
                 computer.name = new_name["name"]
                 computer.reply(f"Ok! Your name has been change to {computer.name}!")
-                data["name"] = computer.name
-                with open(f"storage/config.json", "w") as f:
-                    json.dump(data, f, indent=4)
+                config_data["name"] = computer.name
+                config_json_write(config_data)
                 computer.computer_saving_animation()
             computer.reply("Returning to the menu")
             os.system("clear")
@@ -186,9 +179,8 @@ def menu():
                 computer.editor = "nvim"
             else:
                 computer.editor = new_editor["editor"].lower()
-            data["editor"] = computer.editor
-            with open(f"storage/config.json", "w") as f:
-                    json.dump(data, f, indent=4)
+            config_data["editor"] = computer.editor
+            config_json_write(config_data)
             computer.computer_saving_animation()
             os.system("clear")
             menu()
@@ -200,24 +192,21 @@ def menu():
             if new_logs_location["logs_location"] == "":
                 computer.logs_location = "storage/logs/"
                 computer.reply(f"Ok, the default path will be used! File Path: '{computer.logs_location}'.")
-                data["logs_location"] = computer.logs_location
-                with open(f"storage/config.json", "w") as f:
-                    json.dump(data, f, indent=4)
+                config_data["logs_location"] = computer.logs_location
+                config_json_write(config_data)
                 computer.computer_saving_animation()
             else:
                 if new_logs_location["logs_location"].endswith('/'):
                     computer.logs_location = new_logs_location["logs_location"]
                     computer.reply(f"Ok, {computer.logs_location} sounds good!")
-                    data["logs_location"] = computer.logs_location
-                    with open(f"storage/config.json", "w") as f:
-                        json.dump(data, f, indent=4)                    
+                    config_data["logs_location"] = computer.logs_location
+                    config_json_write(config_data)                   
                     computer.computer_saving_animation()
                 else:
                     computer.logs_location = new_logs_location["logs_location"] + "/"
                     computer.reply(f"Ok, {computer.logs_location} sounds good!")
-                    data["logs_location"] = computer.logs_location
-                    with open(f"storage/config.json", "w") as f:
-                        json.dump(data, f, indent=4)    
+                    config_data["logs_location"] = computer.logs_location
+                    config_json_write(config_data)   
                     computer.computer_saving_animation()          
             os.system("clear")
             menu()
@@ -230,19 +219,17 @@ def menu():
                 computer.reply("No value was given, default MOTD it is!")
                 computer.custom_MOTD = False
                 computer.MOTD_text = None
-                data["custom_MOTD_enabled"] = computer.custom_MOTD
-                data["custom_motd"] = computer.MOTD_text
-                with open(f"storage/config.json", "w") as f:
-                    json.dump(data, f, indent=4)
+                config_data["custom_MOTD_enabled"] = computer.custom_MOTD
+                config_data["custom_motd"] = computer.MOTD_text
+                config_json_write(config_data)
                 computer.computer_saving_animation()
             else:
                 computer.reply(f"Custom MOTD has been set to {new_custom_MOTD["MOTD"]}")
                 computer.custom_MOTD = True
                 computer.MOTD_text = new_custom_MOTD["MOTD"]
-                data["custom_MOTD_enabled"] = computer.custom_MOTD
-                data["custom_motd"] = computer.MOTD_text
-                with open(f"storage/config.json", "w") as f:
-                    json.dump(data, f, indent=4)
+                config_data["custom_MOTD_enabled"] = computer.custom_MOTD
+                config_data["custom_motd"] = computer.MOTD_text
+                config_json_write(config_data)
                 computer.computer_saving_animation()
             os.system("clear")
             menu()
