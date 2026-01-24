@@ -104,9 +104,6 @@ def menu():
             with open(f"{computer.logs_location}{file}", "r") as f: 
                 text = f.read().lower().split(" ")
 
-            with open(f"{computer.logs_location}{file}", "r") as f: 
-                period_text = f.read()
-
             for word in text:
                 if "the" in word:
                     the_uses.append(word)
@@ -114,9 +111,9 @@ def menu():
                 if "romulan" in word or "romulans" in word:
                     romulan_uses.append(word)
 
-            for ch in period_text:
-                if "." in ch:
-                    period_uses.append(ch)
+                for ch in word:
+                    if "." in ch:
+                            period_uses.append(ch)
 
         computer.reply("Here are the stats for your log files!")
         print(f"-- \nTotal Logs: {len(file_list)}")
