@@ -25,11 +25,11 @@ def menu():
         if computer.custom_MOTD == False:
             with open("motd.json", "r") as f:
                 motd = json.load(f)
-
-        if computer.custom_MOTD == False:
-            get_motd = motd[random.randrange(len(motd))]
+                get_motd = motd[random.randrange(len(motd))]
         else: 
             get_motd = computer.MOTD_text
+
+
         motd_name = computer.name
         computer.reply("MOTD: " + get_motd.format(captain_name=motd_name))
         get_choice = menu_choice()
