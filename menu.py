@@ -132,7 +132,6 @@ def menu():
             if visit_website["choice"]:
                 try: 
                     webbrowser.open("https://renos.world", new=0, autoraise=True)
-                    raise RuntimeError("RuntimeError")
                 except Exception as e:
                     input(f"Error: {e}, are you using a headless setup like WSL? Press enter to return to the menu.")
             else:
