@@ -7,7 +7,7 @@ STORAGE_LOCATION = "storage/"
 p = Path(STORAGE_LOCATION)
 config_file = "config.json"
 
-# This is only used for after first_boot operations.
+# This is used to load data from json into memory for Class assignment
 try:
     if p.exists() != False:   
 
