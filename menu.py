@@ -4,6 +4,7 @@ from classes import computer_logic
 from data_processor import *
 
 # Setup Instance Variables for the menu
+config_data = load_data()
 computer = computer_logic()
 computer.name = config_data["name"]
 computer.custom_MOTD = config_data["custom_MOTD_enabled"]

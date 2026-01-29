@@ -1,12 +1,12 @@
-import json, os
 from functions import *
 from classes import computer_logic
+from data_processor import *
 
 def init_computer():
     computer = computer_logic()
     computer.reply("Welcome Captain! Looks like this is your first time here!")
     computer.reply("Let's begin the setup process!")
-    computer.reply("I will now ask you some questions to get started! Let's start with your name")
+    computer.reply("I will now ask you some questions to get started! Let's start with your name, Just press 'enter' for default values.")
     name_answer = name_question()
     computer.name = name_answer["name"]
     computer.saving_state = True
@@ -36,7 +36,6 @@ def init_computer():
     computer.saving_state = False
 
     computer.reply(f"Ok! Now, where do you want me to save your log's, {computer.name}?")
-    computer.reply(f"You can just press 'enter' on the question for the default save location.")
     computer.reply(f"Please make sure you enter the absolute path")
     computer.saving_state = True
     logs_location = init_logs_location_question()
@@ -54,7 +53,7 @@ def init_computer():
             computer.reply(f"Ok, {computer.logs_location} sounds good!")
             computer.saving_state = False
 
-    computer.reply(f"Ok, lets set a custom MOTD! Again, just press 'enter' for the default MOTD.")
+    computer.reply(f"Ok, lets set a custom MOTD!")
     MOTD = MOTD_question()
     computer.saving_state = True
 
@@ -68,16 +67,11 @@ def init_computer():
         computer.reply(f"Ok, '{computer.MOTD_text}' has been set as the MOTD!")
         computer.saving_state = False   
 
-    computer.reply("Ok! Everything is now set!")
-    computer.reply("Here is some useful information.")
+    computer.reply("Ok! Everything is now set! Here is some useful information.")
     computer.reply("I save titles and dates in the top two lines of each log.")
     computer.reply("Dates are stored in the Julian time format.")
     computer.reply("All files are stored locally and no data is transmitted from this secure terminal, unless you make a system for it.")
-    computer.reply("So, if you accidentally delete everything... I will literally lose my mind.")
-    computer.reply("Please remember to not edit the Julian date and title position in the raw files, will make sorting annoying!")
-    computer.reply(f"Ok! Well, enough for introductions. Let's go to the home screen!")
 
-    computer.reply("OK! Are you ready to get this thing going?")
     go_home = init_bonus_question()
     if go_home['Yes']:
         computer.reply("OK! Let's go!")
@@ -88,26 +82,29 @@ def init_computer():
         computer.reply("Telling Romulans(ANGRY VULCANS) that Vulcans are plotting to take over the galaxy.")
         computer.reply("Got reply... I think I just started a war...")
 
-    try: 
-        os.mkdir("storage/")
-        os.mkdir("storage/logs/")
+    try:   
+        first_boot_dir(computer.logs_location)
+
         config = {"name": f"{computer.name}",
                 "custom_MOTD_enabled": computer.custom_MOTD,
                 "custom_motd": f"{computer.MOTD_text}",
                 "editor": f"{computer.editor.lower()}",
                 "logs_location": f"{computer.logs_location}"}
 
-        with open(f"storage/config.json", "w") as f:
-            json.dump(config, f, indent=4)
+        config_json_write(config)
 
         get_date_conversion = convert_date_to_julian()
-        with open(f"{computer.logs_location}Heyyyooo.txt", "w") as f:
-            f.write(f"Julian Date: {get_date_conversion} \n")
-            f.write("Title: Heyyyooo\n\n")
-            f.write("Start of Captains Log:\n")
-            f.write("On a far.. far away world... a computer from the Enterprise NX-01! Wait... OH YEAH THIS IS A DEMO LOG. Sorry, uhh so uhh yeah...\n\n")
-            f.write("Logs are stored like this in text files, and the Julian date and name of the log are stored at the top.\n")
-            f.write("My creator made this dinky little program while learning backend development, starting with PYTHON! I hope you find some joy in this!")
+
+        contents = [
+            f"Julian Date: {get_date_conversion} \n",
+            "Title: Heyyyooo\n\n",
+            "Start of Captains Log:\n",
+            "On a far.. far away world... a computer from the Enterprise NX-01! Wait... OH YEAH THIS IS A DEMO LOG. Sorry, uhh so uhh yeah...\n\n",
+            "Logs are stored like this in text files, and the Julian date and name of the log are stored at the top.\n",
+            "My creator made this dinky little program while learning backend development, starting with PYTHON! I hope you find some joy in this!"
+        ]
+
+        first_boot_file(contents, computer.logs_location)
 
     except Exception as e:
         print(f"Uh oh.. something went wrong... I was not able to create the startup files fully! ERROR: {e}")

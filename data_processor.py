@@ -12,13 +12,13 @@ m = Path(DEFAULT_MOTD_LOCATION)
 motd_file = "motd.json"
 
 # This is used to load data from json into memory for Class assignment
-try:
-    if p.exists() != False:   
-
+def load_data():
+    try:
         with open(p / config_file, "r") as f:
             config_data = json.load(f)
-except Exception as e:
-    print(f"Oops! I cannot load my system config! ERROR:{e}")
+            return config_data
+    except Exception as e:
+        print(f"Oops! I cannot load my system config! ERROR:{e}")
 
 # Load default MOTDs
 with open(m / motd_file, "r") as f:
@@ -28,3 +28,16 @@ with open(m / motd_file, "r") as f:
 def config_json_write(config_data):
     with open(p / config_file, "w") as f:
         json.dump(config_data, f, indent=4)
+
+# Make dir on first boot
+def first_boot_dir(logs_location):
+    Path.mkdir(STORAGE_LOCATION)
+    Path.mkdir(logs_location)
+
+# Write file on first boot
+def first_boot_file(list, logs_location):
+    logs = Path(logs_location)
+    title = "Heyyyooo.txt"
+    with open(logs / title, "w") as f:
+        for string in list:
+            f.write(string)
