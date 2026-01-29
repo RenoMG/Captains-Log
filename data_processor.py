@@ -2,10 +2,14 @@ import json
 from pathlib import Path
 
 STORAGE_LOCATION = "storage/"
+DEFAULT_MOTD_LOCATION = ""
 
 # Load config location with pathlib for multi-os compatibility
 p = Path(STORAGE_LOCATION)
 config_file = "config.json"
+
+m = Path(DEFAULT_MOTD_LOCATION)
+motd_file = "motd.json"
 
 # This is used to load data from json into memory for Class assignment
 try:
@@ -17,7 +21,7 @@ except Exception as e:
     print(f"Oops! I cannot load my system config! ERROR:{e}")
 
 # Load default MOTDs
-with open("motd.json", "r") as f:
+with open(m / motd_file, "r") as f:
     motd = json.load(f)
 
 # Write data to config

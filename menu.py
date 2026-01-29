@@ -1,4 +1,4 @@
-import json, os, random, subprocess, webbrowser
+import os, random, subprocess, webbrowser
 from functions import *
 from classes import computer_logic
 from data_processor import *
