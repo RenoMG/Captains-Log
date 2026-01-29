@@ -1,11 +1,14 @@
-import os
+from pathlib import Path
 from first_boot import init_computer
 
+# Check config location with pathlib for multi-os compatibility
+p = Path("storage/")
+
 def main():
-    if os.path.exists("storage/config.json") == False:
+    if p.exists() == False:
         init_computer()
 
-    if os.path.exists("storage/config.json") == True:
+    if p.exists():
         from menu import menu_init
         menu_init()
 
