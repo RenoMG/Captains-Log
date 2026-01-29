@@ -1,4 +1,3 @@
-from pathlib import Path
 from data_processor import p
 from first_boot import init_computer
 
