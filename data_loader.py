@@ -1,8 +1,10 @@
 import json
 from pathlib import Path
 
+STORAGE_LOCATION = "storage/"
+
 # Load config location with pathlib for multi-os compatibility
-p = Path("storage/")
+p = Path(STORAGE_LOCATION)
 config_file = "config.json"
 
 # This is only used for after first_boot operations.
