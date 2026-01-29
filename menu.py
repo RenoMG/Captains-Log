@@ -1,7 +1,9 @@
 import json, os, random, subprocess, webbrowser
 from functions import *
 from classes import computer_logic
-from data_loader import config_data
+from data_loader import config_data, p
+from pathlib import Path 
+
 
 # Setup Instance Variables for the menu
 computer = computer_logic()

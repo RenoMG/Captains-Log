@@ -1,10 +1,9 @@
 from pathlib import Path
-from data_loader import STORAGE_LOCATION
+from data_loader import p
 from first_boot import init_computer
 
 # Check config location with pathlib for multi-os compatibility
-p = Path(STORAGE_LOCATION)
-
+print(p)
 def main():
     if p.exists() == False:
         init_computer()
