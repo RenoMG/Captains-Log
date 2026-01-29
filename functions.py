@@ -1,6 +1,7 @@
+import inquirer, os
 from astropy.time import Time
 from datetime import date
-import inquirer, os, json
+from data_processor import *
 
 def convert_date_to_julian():
     normal_date = date.today()
@@ -49,9 +50,8 @@ def menu_choice():
     return choice
 
 def edit_log_choice():
-    with open("storage/config.json", "r") as f:
-        data = json.load(f)
-    log_directory = data["logs_location"]
+    config_data = load_data()
+    log_directory = config_data["logs_location"]
     log_files = [file for file in os.listdir(log_directory)]
 
     log_choice = [
