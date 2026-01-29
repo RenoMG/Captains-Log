@@ -15,3 +15,12 @@ try:
             config_data = json.load(f)
 except Exception as e:
     print(f"Oops! I cannot load my system config! ERROR:{e}")
+
+# Load default MOTDs
+with open("motd.json", "r") as f:
+    motd = json.load(f)
+
+# Write data to config
+def config_json_write(config_data):
+    with open(p / config_file, "w") as f:
+        json.dump(config_data, f, indent=4)

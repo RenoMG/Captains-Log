@@ -6,10 +6,6 @@ def convert_date_to_julian():
     normal_date = date.today()
     return str(Time(str(normal_date)).jd)
 
-def config_json_write(config_data):
-    with open(f"storage/config.json", "w") as f:
-        json.dump(config_data, f, indent=4)
-
 # First boot only functions
 def init_bonus_question():
     yes_or_no = [
@@ -18,7 +14,6 @@ def init_bonus_question():
 
     choice = inquirer.prompt(yes_or_no)
     return choice
-
 
 # General functions used in multiple places
 def editor_question():
