@@ -107,7 +107,6 @@ def init_logs_location_question():
 
     answer = inquirer.prompt(questions)
     print("\n")
-    print(answer)
     return answer
 
 def MOTD_question():
