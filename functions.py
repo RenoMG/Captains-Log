@@ -1,7 +1,8 @@
-import inquirer, os
+import inquirer
 from astropy.time import Time
 from datetime import date
 from data_processor import *
+from pathlib import Path
 
 def convert_date_to_julian():
     normal_date = date.today()
@@ -51,8 +52,8 @@ def menu_choice():
 
 def edit_log_choice():
     config_data = load_data()
-    log_directory = config_data["logs_location"]
-    log_files = [file for file in os.listdir(log_directory)]
+    p = Path(config_data["logs_location"])
+    log_files = list(file.name for file in p.glob("**/*.txt"))
 
     log_choice = [
         inquirer.List(
@@ -64,6 +65,8 @@ def edit_log_choice():
 
     choice = inquirer.prompt(log_choice)
     return choice
+
+edit_log_choice()
 
 def name_question():
     questions = [
@@ -92,9 +95,10 @@ def create_log_question():
 
 def init_logs_location_question():
     def logs_location_validation(answer, current):
+        p = Path(current)
         if len(current) == 0:
             return True
-        elif os.path.isdir(f"{current}") == True:
+        elif p.is_dir():
             return True
         else:
             return False
@@ -105,6 +109,7 @@ def init_logs_location_question():
 
     answer = inquirer.prompt(questions)
     print("\n")
+    print(answer)
     return answer
 
 def MOTD_question():
