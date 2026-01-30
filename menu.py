@@ -1,9 +1,10 @@
-import json, os, random, subprocess, webbrowser
+import os, random, subprocess, webbrowser
 from functions import *
 from classes import computer_logic
-from data_loader import config_data
+from data_processor import *
 
 # Setup Instance Variables for the menu
+config_data = load_data()
 computer = computer_logic()
 computer.name = config_data["name"]
 computer.custom_MOTD = config_data["custom_MOTD_enabled"]
@@ -21,11 +22,9 @@ def menu():
     while True:
         os.system("clear")
 
-        # Don't load MOTD file if Custom MOTD is enabled
+        # Use custom MOTD if enabled
         if computer.custom_MOTD == False:
-            with open("motd.json", "r") as f:
-                motd = json.load(f)
-                get_motd = motd[random.randrange(len(motd))]
+            get_motd = motd[random.randrange(len(motd))]
         else: 
             get_motd = computer.MOTD_text
 

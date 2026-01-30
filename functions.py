@@ -1,14 +1,12 @@
+import inquirer
 from astropy.time import Time
 from datetime import date
-import inquirer, os, json
+from data_processor import *
+from pathlib import Path
 
 def convert_date_to_julian():
     normal_date = date.today()
     return str(Time(str(normal_date)).jd)
-
-def config_json_write(config_data):
-    with open(f"storage/config.json", "w") as f:
-        json.dump(config_data, f, indent=4)
 
 # First boot only functions
 def init_bonus_question():
@@ -18,7 +16,6 @@ def init_bonus_question():
 
     choice = inquirer.prompt(yes_or_no)
     return choice
-
 
 # General functions used in multiple places
 def editor_question():
@@ -54,10 +51,9 @@ def menu_choice():
     return choice
 
 def edit_log_choice():
-    with open("storage/config.json", "r") as f:
-        data = json.load(f)
-    log_directory = data["logs_location"]
-    log_files = [file for file in os.listdir(log_directory)]
+    config_data = load_data()
+    p = Path(config_data["logs_location"])
+    log_files = list(file.name for file in p.glob("**/*.txt"))
 
     log_choice = [
         inquirer.List(
@@ -97,9 +93,10 @@ def create_log_question():
 
 def init_logs_location_question():
     def logs_location_validation(answer, current):
+        p = Path(current)
         if len(current) == 0:
             return True
-        elif os.path.isdir(f"{current}") == True:
+        elif p.is_dir():
             return True
         else:
             return False

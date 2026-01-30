@@ -1,11 +1,11 @@
-import os
+from data_processor import p
 from first_boot import init_computer
 
 def main():
-    if os.path.exists("storage/config.json") == False:
+    if p.exists() == False:
         init_computer()
 
-    if os.path.exists("storage/config.json") == True:
+    if p.exists():
         from menu import menu_init
         menu_init()
 
