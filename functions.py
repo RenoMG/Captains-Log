@@ -66,8 +66,6 @@ def edit_log_choice():
     choice = inquirer.prompt(log_choice)
     return choice
 
-edit_log_choice()
-
 def name_question():
     questions = [
         inquirer.Text(name="name", message="What is your name?"),
