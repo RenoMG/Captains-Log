@@ -1,8 +1,10 @@
 import json
 from pathlib import Path
+import sqlite3
 
 STORAGE_LOCATION = "storage/"
 DEFAULT_MOTD_LOCATION = ""
+LOGS_DB = "logs.db"
 
 # Load config location with pathlib for multi-os compatibility
 p = Path(STORAGE_LOCATION)
@@ -35,9 +37,36 @@ def first_boot_dir(logs_location):
     Path.mkdir(logs_location)
 
 # Write file on first boot
-def first_boot_file(list, logs_location):
+def first_boot_file_old(list, logs_location):
     logs = Path(logs_location)
     title = "Heyyyooo.txt"
     with open(logs / title, "w") as f:
         for string in list:
             f.write(string)
+
+def first_boot_file(contents, logs_location, get_date_conversion):
+
+    logs = Path(logs_location)
+
+    # Create database on first boot
+    db_file = sqlite3.connect(logs / LOGS_DB)
+    cursor = db_file.cursor()
+
+    title = "Heyyyooo.txt"
+    date = get_date_conversion
+    body = contents
+
+    cursor.execute(
+        """CREATE TABLE IF NOT EXISTS logs(
+                        title 'Hello World!',
+                        date 'Date',
+                        body 'Whooo! Here is my stuff'
+        )"""
+    )
+
+    cursor.execute(
+        """INSERT INTO logs(title, date, body) VALUES (?, ?, ?)""",
+        (title, date, body),
+    )
+
+    db_file.commit()

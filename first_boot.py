@@ -95,16 +95,11 @@ def init_computer():
 
         get_date_conversion = convert_date_to_julian()
 
-        contents = [
-            f"Julian Date: {get_date_conversion} \n",
-            "Title: Heyyyooo\n\n",
-            "Start of Captains Log:\n",
-            "On a far.. far away world... a computer from the Enterprise NX-01! Wait... OH YEAH THIS IS A DEMO LOG. Sorry, uhh so uhh yeah...\n\n",
-            "Logs are stored like this in text files, and the Julian date and name of the log are stored at the top.\n",
-            "My creator made this dinky little program while learning backend development, starting with PYTHON! I hope you find some joy in this!"
-        ]
+        contents = f"""On a far.. far away world... a computer from the Enterprise NX-01! Wait... OH YEAH THIS IS A DEMO LOG. Sorry, uhh so uhh yeah...\n\n
+            Logs are stored like this in text files, and the Julian date and name of the log are stored at the top.\n
+            My creator made this dinky little program while learning backend development, starting with PYTHON! I hope you find some joy in this!"""
 
-        first_boot_file(contents, computer.logs_location)
+        first_boot_file(contents, computer.logs_location, get_date_conversion)
 
     except Exception as e:
         print(f"Uh oh.. something went wrong... I was not able to create the startup files fully! ERROR: {e}")
