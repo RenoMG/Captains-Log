@@ -45,17 +45,17 @@ def first_boot_db(contents, logs_location, get_date_conversion):
     db_file = sqlite3.connect(logs / LOGS_DB)
     cursor = db_file.cursor()
 
-    title = "Heyyyooo.txt"
-    date = get_date_conversion
-    body = contents
-
     cursor.execute(
         """CREATE TABLE IF NOT EXISTS logs(
                         title TEXT unique,
                         date REAL,
-                        body TEXT'
+                        body TEXT
         )"""
     )
+
+    title = "Heyyyooo.txt"
+    date = get_date_conversion
+    body = contents
 
     cursor.execute(
         """INSERT INTO logs(title, date, body) VALUES (?, ?, ?)""",

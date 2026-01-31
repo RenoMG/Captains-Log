@@ -103,6 +103,3 @@ def init_computer():
 
     except Exception as e:
         print(f"Uh oh.. something went wrong... I was not able to create the startup files fully! ERROR: {e}")
-
-    from menu import menu
-    menu()
