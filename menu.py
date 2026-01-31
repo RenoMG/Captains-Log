@@ -123,6 +123,7 @@ def menu():
                     computer.logs_location = "storage/logs/"
                     computer.reply(f"Ok, the default path will be used! File Path: '{computer.logs_location}'.")
                     config_data["logs_location"] = computer.logs_location
+                    first_boot_dir(computer.logs_location)
                     config_json_write(config_data)
                     computer.computer_saving_animation()
                 else:
@@ -130,7 +131,7 @@ def menu():
                         computer.logs_location = new_logs_location["logs_location"]
                         computer.reply(f"Ok, {computer.logs_location} sounds good!")
                         config_data["logs_location"] = computer.logs_location
-                        config_json_write(config_data)       
+                        config_json_write(config_data)      
                         first_boot_db("IDK if I like this new locations for the logs...", computer.logs_location, get_date_conversion) 
                         computer.computer_saving_animation()
                     else:
