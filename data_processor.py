@@ -58,9 +58,9 @@ def first_boot_file(contents, logs_location, get_date_conversion):
 
     cursor.execute(
         """CREATE TABLE IF NOT EXISTS logs(
-                        title 'Hello World!',
-                        date 'Date',
-                        body 'Whooo! Here is my stuff'
+                        title TEXT unique,
+                        date REAL,
+                        body TEXT'
         )"""
     )
 
