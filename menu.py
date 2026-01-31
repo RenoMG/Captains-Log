@@ -113,8 +113,11 @@ def menu():
                 os.system("clear")
 
             if setting_choice["setting"] == "Logs Location":
+                get_date_conversion = convert_date_to_julian()
+
                 computer.reply(f"Current Logs Location: {computer.logs_location}")
-                computer.reply("Please remember, when you change the logs location you will have to move all your current logs to the new location!")
+                computer.reply("Please remember, when you change the logs location you will have to move your current DB to the new location!")
+                computer.reply("If you don't wish to keep your current logs you can ignore this as a new DB will be crated.")
                 new_logs_location = init_logs_location_question()
                 if new_logs_location["logs_location"] == "":
                     computer.logs_location = "storage/logs/"
@@ -127,13 +130,15 @@ def menu():
                         computer.logs_location = new_logs_location["logs_location"]
                         computer.reply(f"Ok, {computer.logs_location} sounds good!")
                         config_data["logs_location"] = computer.logs_location
-                        config_json_write(config_data)                   
+                        config_json_write(config_data)       
+                        first_boot_db("IDK if I like this new locations for the logs...", computer.logs_location, get_date_conversion) 
                         computer.computer_saving_animation()
                     else:
                         computer.logs_location = new_logs_location["logs_location"] + "/"
                         computer.reply(f"Ok, {computer.logs_location} sounds good!")
                         config_data["logs_location"] = computer.logs_location
                         config_json_write(config_data)   
+                        first_boot_db("IDK if I like this new locations for the logs...", computer.logs_location, get_date_conversion)
                         computer.computer_saving_animation()          
                 os.system("clear")
 
