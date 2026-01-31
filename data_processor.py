@@ -31,6 +31,8 @@ def config_json_write(config_data):
     with open(p / config_file, "w") as f:
         json.dump(config_data, f, indent=4)
 
+# Log manipulation operations
+
 def list_logs():
     config_data = load_data()
 
@@ -48,7 +50,6 @@ def list_logs():
         titles.append(title[0])
 
     return titles
-
 
 def edit_log(title):
     try:
@@ -70,6 +71,33 @@ def edit_log(title):
     except Exception as e:
         print(f"Uh oh.. something went wrong... I was not able to edit the log! ERROR: {e}")
         input()
+
+def create_log(title, get_date_conversion):
+
+    for log_title in list_logs():
+        if title == log_title:
+            print("ERROR: Log entry with that title already present!")
+            input()
+            return
+
+    config_data = load_data()
+    l = Path(config_data["logs_location"])
+
+    # Create db connection
+    db_file = sqlite3.connect(l / LOGS_DB)
+    cursor = db_file.cursor()
+
+    date = get_date_conversion
+    body = None
+
+    cursor.execute(
+        """INSERT INTO logs(title, date, body) VALUES (?, ?, ?)""",
+        (title, date, body),
+    )
+
+    db_file.commit()
+
+    edit_log(title)
      
 
 # First boot data operations

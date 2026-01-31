@@ -37,22 +37,13 @@ def menu():
             os.system("clear")
             title = create_log_question()
             try: 
-                if os.path.exists(f"{computer.logs_location}{title['log_name']}.txt") == True:
-                    computer.reply("A log with that name already exists, opening it now!")
-
                 get_date_conversion = convert_date_to_julian()
-                with open(f"{computer.logs_location}{title['log_name']}.txt", "w") as f:
-                    f.write(f"Julian Date: {get_date_conversion} \n")
-                    f.write(f"Title: {title['log_name']}\n\n")
+
+                create_log(title["log_name"], get_date_conversion)
 
             except Exception as e:
                 print(f"Uh oh.. something went wrong... I was not able to create the log! ERROR: {e}")
-
-            computer.reply(f"The log has been created, {computer.name}! Time to get typing!")
-            
-            process = subprocess.Popen([computer.editor, f"{computer.logs_location}{title['log_name']}.txt"])
-            process.wait()
-            os.system("clear")
+                input()
 
         if get_choice["menu"] == "Edit Log":
             os.system("clear")
