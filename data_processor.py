@@ -33,7 +33,7 @@ def config_json_write(config_data):
 
 # Log manipulation operations
 
-def list_logs():
+def list_log_names():
     config_data = load_data()
 
     l = Path(config_data["logs_location"])
@@ -74,7 +74,7 @@ def edit_log(title):
 
 def create_log(title, get_date_conversion):
 
-    for log_title in list_logs():
+    for log_title in list_log_names():
         if title == log_title:
             print("ERROR: Log entry with that title already present!")
             input()

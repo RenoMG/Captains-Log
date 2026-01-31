@@ -45,34 +45,18 @@ def menu():
                 print(f"Uh oh.. something went wrong... I was not able to create the log! ERROR: {e}")
                 input()
 
-        if get_choice["menu"] == "Edit Log":
+        if get_choice["menu"] == "List logs":
             os.system("clear")
             computer.reply(f"Ok, here is all of the logs you have. Please select one to edit!")
             log_to_edit = edit_log_choice()
             computer.reply(f"Ok, opening {log_to_edit['logs']}")
-                
+                    
             edit_log(log_to_edit["logs"])
 
         if get_choice["menu"] == "Quit":
             os.system("clear")
             computer.reply(f"Awhhhh mannnn... ok {computer.name}! See you next time!")
             quit()
-
-        if get_choice["menu"] == "List logs":
-            os.system("clear")
-            file_list = [file for file in os.listdir(computer.logs_location)]
-            print(f"Total Logs: {len(file_list)}")
-
-            for file in file_list:
-                with open(f"{computer.logs_location}{file}") as f: 
-                    julian_date = f.readline().removeprefix("Julian Date: ").strip(" \n")
-
-                with open(f"{computer.logs_location}{file}") as f: 
-                    title_name = f.readlines()[1].removeprefix("Title: ").strip(" \n")
-
-                print(f"-- \nFile Name: {file},\nTitle: {title_name},\nCreation Date: {julian_date}")
-                
-            input("--\nPress Enter to close.")
 
         if get_choice["menu"] == "Log Stats":
             os.system("clear")

@@ -43,7 +43,7 @@ def menu_choice():
         inquirer.List(
             "menu",
             message="Please choose an option!",
-            choices=["Create Log", "Edit Log", "List logs", "Log Stats", "Edit settings", "About", "Quit"],
+            choices=["Create Log", "List logs", "Log Stats", "Edit settings", "About", "Quit"],
         )
     ]
 
@@ -51,7 +51,7 @@ def menu_choice():
     return choice
 
 def edit_log_choice():
-    log_files = list_logs()
+    log_files = list_log_names()
 
     log_choice = [
         inquirer.List(
