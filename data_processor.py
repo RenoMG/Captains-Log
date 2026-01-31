@@ -124,7 +124,7 @@ def first_boot_db(contents, logs_location, get_date_conversion):
         )"""
     )
 
-    title = "Heyyyooo.txt"
+    title = "Heyyyooo"
     date = get_date_conversion
     body = contents
 
