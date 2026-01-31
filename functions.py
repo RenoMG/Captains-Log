@@ -51,9 +51,7 @@ def menu_choice():
     return choice
 
 def edit_log_choice():
-    config_data = load_data()
-    p = Path(config_data["logs_location"])
-    log_files = list(file.name for file in p.glob("**/*.txt"))
+    log_files = list_logs()
 
     log_choice = [
         inquirer.List(

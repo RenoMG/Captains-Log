@@ -59,14 +59,8 @@ def menu():
             computer.reply(f"Ok, here is all of the logs you have. Please select one to edit!")
             log_to_edit = edit_log_choice()
             computer.reply(f"Ok, opening {log_to_edit['logs']}")
-
-            try: 
-                process = subprocess.Popen([computer.editor, f"{computer.logs_location}{log_to_edit["logs"]}"])
-                process.wait()
-            except Exception as e:
-                print(f"Uh oh.. something went wrong... I was not able to edit the log! ERROR: {e}")
-
-            os.system("clear")
+                
+            edit_log(log_to_edit["logs"])
 
         if get_choice["menu"] == "Quit":
             os.system("clear")

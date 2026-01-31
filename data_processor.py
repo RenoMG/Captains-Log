@@ -1,4 +1,4 @@
-import json
+import json, editor
 from pathlib import Path
 import sqlite3
 
@@ -30,6 +30,49 @@ with open(m / motd_file, "r") as f:
 def config_json_write(config_data):
     with open(p / config_file, "w") as f:
         json.dump(config_data, f, indent=4)
+
+def list_logs():
+    config_data = load_data()
+
+    l = Path(config_data["logs_location"])
+
+    db_file = sqlite3.connect(l / LOGS_DB)
+    db_file.row_factory = sqlite3.Row
+    cursor = db_file.cursor()
+
+    cursor.execute("""SELECT title FROM logs""")
+
+    titles = []
+
+    for title in cursor:
+        titles.append(title[0])
+
+    return titles
+
+
+def edit_log(title):
+    try:
+        config_data = load_data()
+
+        l = Path(config_data["logs_location"])
+
+        db_file = sqlite3.connect(l / LOGS_DB)
+        cursor = db_file.cursor()
+
+        cursor.execute("""SELECT title, date, body FROM logs WHERE title=?""", (title,))
+
+        fetch_body = cursor.fetchone()[2]
+        
+        capture_edit = editor.editor(text=fetch_body)
+
+        cursor.execute("""UPDATE logs SET body=? WHERE title=?""", (capture_edit, title))
+        db_file.commit()
+    except Exception as e:
+        print(f"Uh oh.. something went wrong... I was not able to edit the log! ERROR: {e}")
+        input()
+     
+
+# First boot data operations
 
 # Make dir on first boot
 def first_boot_dir(logs_location):
