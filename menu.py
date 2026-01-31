@@ -37,88 +37,26 @@ def menu():
             os.system("clear")
             title = create_log_question()
             try: 
-                if os.path.exists(f"{computer.logs_location}{title['log_name']}.txt") == True:
-                    computer.reply("A log with that name already exists, opening it now!")
-
                 get_date_conversion = convert_date_to_julian()
-                with open(f"{computer.logs_location}{title['log_name']}.txt", "w") as f:
-                    f.write(f"Julian Date: {get_date_conversion} \n")
-                    f.write(f"Title: {title['log_name']}\n\n")
+
+                create_log(title["log_name"], get_date_conversion)
 
             except Exception as e:
                 print(f"Uh oh.. something went wrong... I was not able to create the log! ERROR: {e}")
+                input()
 
-            computer.reply(f"The log has been created, {computer.name}! Time to get typing!")
-            
-            process = subprocess.Popen([computer.editor, f"{computer.logs_location}{title['log_name']}.txt"])
-            process.wait()
-            os.system("clear")
-
-        if get_choice["menu"] == "Edit Log":
+        if get_choice["menu"] == "List logs":
             os.system("clear")
             computer.reply(f"Ok, here is all of the logs you have. Please select one to edit!")
             log_to_edit = edit_log_choice()
             computer.reply(f"Ok, opening {log_to_edit['logs']}")
-
-            try: 
-                process = subprocess.Popen([computer.editor, f"{computer.logs_location}{log_to_edit["logs"]}"])
-                process.wait()
-            except Exception as e:
-                print(f"Uh oh.. something went wrong... I was not able to edit the log! ERROR: {e}")
-
-            os.system("clear")
+                    
+            edit_log(log_to_edit["logs"])
 
         if get_choice["menu"] == "Quit":
             os.system("clear")
             computer.reply(f"Awhhhh mannnn... ok {computer.name}! See you next time!")
             quit()
-
-        if get_choice["menu"] == "List logs":
-            os.system("clear")
-            file_list = [file for file in os.listdir(computer.logs_location)]
-            print(f"Total Logs: {len(file_list)}")
-
-            for file in file_list:
-                with open(f"{computer.logs_location}{file}") as f: 
-                    julian_date = f.readline().removeprefix("Julian Date: ").strip(" \n")
-
-                with open(f"{computer.logs_location}{file}") as f: 
-                    title_name = f.readlines()[1].removeprefix("Title: ").strip(" \n")
-
-                print(f"-- \nFile Name: {file},\nTitle: {title_name},\nCreation Date: {julian_date}")
-                
-            input("--\nPress Enter to close.")
-
-        if get_choice["menu"] == "Log Stats":
-            os.system("clear")
-            file_list = [file for file in os.listdir(computer.logs_location)]
-            
-            the_uses = []
-            romulan_uses = []
-            period_uses = []
-
-            for file in file_list:
-                with open(f"{computer.logs_location}{file}", "r") as f: 
-                    text = f.read().lower().split(" ")
-
-                for word in text:
-                    if "the" in word:
-                        the_uses.append(word)
-
-                    if "romulan" in word or "romulans" in word:
-                        romulan_uses.append(word)
-
-                    for ch in word:
-                        if "." in ch:
-                                period_uses.append(ch)
-
-            computer.reply("Here are the stats for your log files!")
-            print(f"-- \nTotal Logs: {len(file_list)}")
-            print(f"\nTotal Uses of the word 'The': {len(the_uses)}")
-            print(f"\nTotal Uses of the word 'Romulan'(They scare me): {len(romulan_uses)}")
-            print(f"\nTotal Periods: {len(period_uses)}")
-                
-            input("--\nPress Enter to close.")
 
         if get_choice["menu"] == "About":
             os.system("clear")
@@ -175,8 +113,11 @@ def menu():
                 os.system("clear")
 
             if setting_choice["setting"] == "Logs Location":
+                get_date_conversion = convert_date_to_julian()
+
                 computer.reply(f"Current Logs Location: {computer.logs_location}")
-                computer.reply("Please remember, when you change the logs location you will have to move all your current logs to the new location!")
+                computer.reply("Please remember, when you change the logs location you will have to move your current DB to the new location!")
+                computer.reply("If you don't wish to keep your current logs you can ignore this as a new DB will be crated.")
                 new_logs_location = init_logs_location_question()
                 if new_logs_location["logs_location"] == "":
                     computer.logs_location = "storage/logs/"
@@ -189,13 +130,15 @@ def menu():
                         computer.logs_location = new_logs_location["logs_location"]
                         computer.reply(f"Ok, {computer.logs_location} sounds good!")
                         config_data["logs_location"] = computer.logs_location
-                        config_json_write(config_data)                   
+                        config_json_write(config_data)       
+                        first_boot_db("IDK if I like this new locations for the logs...", computer.logs_location, get_date_conversion) 
                         computer.computer_saving_animation()
                     else:
                         computer.logs_location = new_logs_location["logs_location"] + "/"
                         computer.reply(f"Ok, {computer.logs_location} sounds good!")
                         config_data["logs_location"] = computer.logs_location
                         config_json_write(config_data)   
+                        first_boot_db("IDK if I like this new locations for the logs...", computer.logs_location, get_date_conversion)
                         computer.computer_saving_animation()          
                 os.system("clear")
 
