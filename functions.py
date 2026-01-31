@@ -43,7 +43,7 @@ def menu_choice():
         inquirer.List(
             "menu",
             message="Please choose an option!",
-            choices=["Create Log", "List logs", "Log Stats", "Edit settings", "About", "Quit"],
+            choices=["Create Log", "List logs", "Edit settings", "About", "Quit"],
         )
     ]
 
