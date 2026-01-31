@@ -36,15 +36,8 @@ def first_boot_dir(logs_location):
     Path.mkdir(STORAGE_LOCATION)
     Path.mkdir(logs_location)
 
-# Write file on first boot
-def first_boot_file_old(list, logs_location):
-    logs = Path(logs_location)
-    title = "Heyyyooo.txt"
-    with open(logs / title, "w") as f:
-        for string in list:
-            f.write(string)
-
-def first_boot_file(contents, logs_location, get_date_conversion):
+# Create database and insert example log
+def first_boot_db(contents, logs_location, get_date_conversion):
 
     logs = Path(logs_location)
 

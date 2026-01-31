@@ -99,7 +99,7 @@ def init_computer():
             Logs are stored like this in text files, and the Julian date and name of the log are stored at the top.\n
             My creator made this dinky little program while learning backend development, starting with PYTHON! I hope you find some joy in this!"""
 
-        first_boot_file(contents, computer.logs_location, get_date_conversion)
+        first_boot_db(contents, computer.logs_location, get_date_conversion)
 
     except Exception as e:
         print(f"Uh oh.. something went wrong... I was not able to create the startup files fully! ERROR: {e}")
