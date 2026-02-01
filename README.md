@@ -17,7 +17,7 @@ Feel free to mess around!
 ## Installation
 ### UV: This project uses UV to manage python version and dependencies 
 1. Install UV with: https://docs.astral.sh/uv/getting-started/installation/
-2. Install Git: ``https://git-scm.com/install/``
+2. Install Git: https://git-scm.com/install/
 3. Clone repo: ``git clone https://github.com/RenoMG/Captains-Log.git``
 4. Enter Directory: ``cd Captains-Log``
 5. Sync UV: ``uv sync``
