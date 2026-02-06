@@ -1,4 +1,4 @@
-import json, editor
+import json
 from pathlib import Path
 import sqlite3
 
@@ -110,7 +110,7 @@ def create_log(title, get_date_conversion):
     cursor = db_file.cursor()
 
     date = get_date_conversion
-    body = None
+    body = ""
 
     cursor.execute(
         """INSERT INTO logs(title, date, body) VALUES (?, ?, ?)""",
@@ -118,8 +118,6 @@ def create_log(title, get_date_conversion):
     )
 
     db_file.commit()
-
-    edit_log(title)
      
 
 # First boot data operations

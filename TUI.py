@@ -135,6 +135,9 @@ editor = TextArea(
 
 editing = [False]
 editing_title = [False]
+creating_log = [False]
+
+new_log_title_temp = ''
 
 def get_layout():
     if editing[0]:
@@ -152,7 +155,15 @@ def get_layout():
             Window(content_control, height=6),
             Frame(editor_title, title="EDIT TITLE [Ctrl+S save, Esc cancel]"),
             Window(footer_control, height=2),
-        ]))        
+        ]))      
+    elif creating_log[0]:
+        return Layout(HSplit([
+            Window(header_control, height=2),
+            Window(list_control, height=len(LOG_ENTRIES) + 2),
+            Window(content_control, height=6),
+            Frame(editor_title, title="CREATE TITLE [Ctrl+S save, Esc cancel]"),
+            Window(footer_control, height=2),
+        ]))      
     else:
         return Layout(HSplit([
             Window(header_control, height=2),
@@ -165,7 +176,7 @@ kb = KeyBindings()
 
 @Condition
 def editing_active():
-    if editing[0]:
+    if editing[0] or editing_title[0]:
         return False
     else:
         return True
@@ -199,7 +210,6 @@ def edit_entry(event):
 @kb.add('c-s')
 def save_entry(event):
     if editing[0]:
-        editor.text = LOG_ENTRIES[current_selection[0]][2]
         editor.title = LOG_ENTRIES[current_selection[0]][0]
         edit_log(editor.title, editor.text)
         editing[0] = False
@@ -210,6 +220,12 @@ def save_entry(event):
         editor.title = LOG_ENTRIES[current_selection[0]][0]
         edit_log(editor.title, editor.text)
         editing_title[0] = False
+        event.app.layout = get_layout()
+
+    if creating_log[0]:
+        editor.title = LOG_ENTRIES[current_selection[0]][0]
+        create_log(editor.title, convert_date_to_julian())
+        creating_log[0] = False
         event.app.layout = get_layout()
 
 @kb.add('escape')
@@ -224,12 +240,12 @@ def cancel_edit(event):
 
 @kb.add('n', filter=editing_active)
 def new_entry(event):
-    create_log("title", convert_date_to_julian())
-    LOG_ENTRIES.insert(0, (stardate, "J.L. PICARD", "USS ENTERPRISE", "New log entry..."))
-    current_selection[0] = 0
-    editor.text = "New log entry..."
-    event.app.layout = get_layout()
-    event.app.layout.focus(editor)
+    if not editing[0] and not editing_title[0] and not creating_log[0]:
+        creating_log[0] = True
+        editor_title.text = "Set a Title"
+        event.app.layout = get_layout()
+        event.app.layout.focus(editor_title)
+
 
 @kb.add('q', filter=editing_active)
 def quit_app(event):
