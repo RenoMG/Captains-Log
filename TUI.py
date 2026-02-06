@@ -5,7 +5,7 @@ from prompt_toolkit.key_binding import KeyBindings
 from prompt_toolkit.formatted_text import FormattedText
 from prompt_toolkit.styles import Style
 from datetime import datetime
-import os, random, subprocess, webbrowser, textwrap
+import os, random, subprocess, webbrowser, textwrap, sys
 from functions import *
 from classes import computer_logic
 from data_processor import *
@@ -123,7 +123,7 @@ editor = TextArea(
     text="",
     multiline=True,
     wrap_lines=True,
-    height=10,
+    height=17,
 )
 
 editing = [False]
@@ -133,7 +133,7 @@ def get_layout():
         return Layout(HSplit([
             Window(header_control, height=2),
             Window(list_control, height=len(LOG_ENTRIES) + 2),
-            Window(content_control, height=25),
+            Window(content_control, height=6),
             Frame(editor, title="EDIT LOG ENTRY [Ctrl+S save, Esc cancel]"),
             Window(footer_control, height=2),
         ]))
@@ -203,5 +203,4 @@ app = Application(
     mouse_support=True,
 )
 
-if __name__ == '__main__':
-    app.run()
+app.run()
