@@ -120,14 +120,21 @@ header_control = FormattedTextControl(get_header)
 footer_control = FormattedTextControl(get_footer)
 
 # Editor (hidden initially)
+editor_title = TextArea(
+    text="",
+    multiline=False,
+    height=1,
+)
+
 editor = TextArea(
     text="",
     multiline=True,
     wrap_lines=True,
-    height=17,
+    height=16,
 )
 
 editing = [False]
+editing_title = [False]
 
 def get_layout():
     if editing[0]:
@@ -138,6 +145,14 @@ def get_layout():
             Frame(editor, title="EDIT LOG ENTRY [Ctrl+S save, Esc cancel]"),
             Window(footer_control, height=2),
         ]))
+    elif editing_title[0]:
+        return Layout(HSplit([
+            Window(header_control, height=2),
+            Window(list_control, height=len(LOG_ENTRIES) + 2),
+            Window(content_control, height=6),
+            Frame(editor_title, title="EDIT TITLE [Ctrl+S save, Esc cancel]"),
+            Window(footer_control, height=2),
+        ]))        
     else:
         return Layout(HSplit([
             Window(header_control, height=2),
@@ -167,16 +182,34 @@ def nav_down(event):
 def edit_entry(event):
     if not editing[0]:
         editing[0] = True
+        editor_title.text = LOG_ENTRIES[current_selection[0]][0]
         editor.text = LOG_ENTRIES[current_selection[0]][2]
         event.app.layout = get_layout()
         event.app.layout.focus(editor)
 
+@kb.add('t', filter=editing_active)
+def edit_entry(event):
+    if not editing[0] and not editing_title[0]:
+        editing_title[0] = True
+        editor_title.text = LOG_ENTRIES[current_selection[0]][0]
+        editor.text = LOG_ENTRIES[current_selection[0]][2]
+        event.app.layout = get_layout()
+        event.app.layout.focus(editor_title)
+
 @kb.add('c-s')
 def save_entry(event):
     if editing[0]:
-        sd, captain, ship, _ = LOG_ENTRIES[current_selection[0]]
-        LOG_ENTRIES[current_selection[0]] = (sd, captain, ship, editor.text)
+        editor.text = LOG_ENTRIES[current_selection[0]][2]
+        editor.title = LOG_ENTRIES[current_selection[0]][0]
+        edit_log(editor.title, editor.text)
         editing[0] = False
+        event.app.layout = get_layout()
+
+    if editing_title[0]:
+        editor.text = LOG_ENTRIES[current_selection[0]][2]
+        editor.title = LOG_ENTRIES[current_selection[0]][0]
+        edit_log(editor.title, editor.text)
+        editing_title[0] = False
         event.app.layout = get_layout()
 
 @kb.add('escape')
@@ -185,9 +218,13 @@ def cancel_edit(event):
         editing[0] = False
         event.app.layout = get_layout()
 
+    if editing_title[0]:
+        editing_title[0] = False
+        event.app.layout = get_layout()
+
 @kb.add('n', filter=editing_active)
 def new_entry(event):
-    stardate = f"{45000 + (datetime.now().timetuple().tm_yday / 10):.1f}"
+    create_log("title", convert_date_to_julian())
     LOG_ENTRIES.insert(0, (stardate, "J.L. PICARD", "USS ENTERPRISE", "New log entry..."))
     current_selection[0] = 0
     editor.text = "New log entry..."

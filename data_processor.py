@@ -64,7 +64,7 @@ def list_all_log_data():
 
     return get_all
 
-def edit_log(title):
+def edit_log(title, body):
     try:
         config_data = load_data()
 
@@ -73,13 +73,22 @@ def edit_log(title):
         db_file = sqlite3.connect(l / LOGS_DB)
         cursor = db_file.cursor()
 
-        cursor.execute("""SELECT title, date, body FROM logs WHERE title=?""", (title,))
+        cursor.execute("""UPDATE logs SET body=? WHERE title=?""", (body, title))
+        db_file.commit()
+    except Exception as e:
+        print(f"Uh oh.. something went wrong... I was not able to edit the log! ERROR: {e}")
+        input()
 
-        fetch_body = cursor.fetchone()[2]
-        
-        capture_edit = editor.editor(text=fetch_body)
+def edit_log_title(title_old, title_new):
+    try:
+        config_data = load_data()
 
-        cursor.execute("""UPDATE logs SET body=? WHERE title=?""", (capture_edit, title))
+        l = Path(config_data["logs_location"])
+
+        db_file = sqlite3.connect(l / LOGS_DB)
+        cursor = db_file.cursor()
+
+        cursor.execute("""UPDATE logs SET title=? WHERE title=?""", (title_new, title_old))
         db_file.commit()
     except Exception as e:
         print(f"Uh oh.. something went wrong... I was not able to edit the log! ERROR: {e}")
