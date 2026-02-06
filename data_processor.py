@@ -109,7 +109,7 @@ def first_boot_dir(logs_location):
     if p.exists() == False:
         Path.mkdir(STORAGE_LOCATION)
     if logs.exists() == False:
-        Path.mkdir(logs_locatio)
+        Path.mkdir(logs_location)
 
 # Create database and insert example log
 def first_boot_db(contents, logs_location, get_date_conversion):
