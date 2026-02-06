@@ -1,11 +1,11 @@
 from prompt_toolkit import Application
-from prompt_toolkit.layout import Layout, HSplit, VSplit, Window, FormattedTextControl
+from prompt_toolkit.layout import Layout, HSplit, Window, FormattedTextControl
 from prompt_toolkit.widgets import TextArea, Frame
 from prompt_toolkit.key_binding import KeyBindings
-from prompt_toolkit.formatted_text import HTML, FormattedText
+from prompt_toolkit.formatted_text import FormattedText
 from prompt_toolkit.styles import Style
 from datetime import datetime
-import os, random, subprocess, webbrowser
+import os, random, subprocess, webbrowser, textwrap
 from functions import *
 from classes import computer_logic
 from data_processor import *
@@ -56,7 +56,7 @@ def get_header():
         ('', ' '),
         ('class:orange', '██'),
         ('', '  '),
-        ('class:stardate', f'STARDATE {stardate}'),
+        ('class:stardate', f'JULIANDATE {convert_date_to_julian()}'),
         ('', '\n'),
     ])
 
@@ -72,9 +72,9 @@ def get_log_list():
             style = 'class:data'
         
         lines.append(marker)
-        lines.append((style, f'{"ship":<16} JULIANDATE {jd}  {computer.name}\n'))
+        lines.append((style, f'{"Enterprise NX-01":<16} JULIANDATE {jd}  {computer.name}\n'))
     
-    lines.append(('class:title', '╰────────────────────────────────────────────────╯'))
+    lines.append(('class:title', '╰───────────────────────────────────────────────╯'))
     return FormattedText(lines)
 
 def get_log_content():
@@ -87,24 +87,15 @@ def get_log_content():
         ('class:blue', '██████████████████████'),
         ('', '\n\n'),
         ('class:title', f'  Captain\'s Log - Juliandate {convert_date_to_julian()}\n'),
-        ('class:title', f'  {"ship"}\n\n'),
-        ('class:data', f'  {body}\n'),
-        ('', '\n'),
-        ('class:gold', '██'),
-        ('', ' '),
-        ('class:orange', '██'),
-        ('', ' '),
-        ('class:blue', '███'),
-        ('', ' '),
-        ('class:status-on', '● REC'),
-        ('', '  '),
-        ('class:status-off', '○ ENCRYPT'),
-        ('', '  '),
-        ('class:status-on', '● ARCHIVE'),
+        ('class:title', f'  {"Enterprise NX-01"}\n\n'),
+        ('class:title', f'  {"Log Excerpt:"}\n\n'),
+        ('class:title', '╭───────────────────────────────────────────────╮\n'),
+        ('class:data', f'  {textwrap.fill(body, width=45, placeholder=" ...", replace_whitespace=False)}\n')
     ])
 
 def get_footer():
     return FormattedText([
+        ('class:title', '╰───────────────────────────────────────────────╯'),
         ('', '\n'),
         ('class:gold', '███████'),
         ('', ' '),
@@ -148,7 +139,7 @@ def get_layout():
         return Layout(HSplit([
             Window(header_control, height=2),
             Window(list_control, height=len(LOG_ENTRIES) + 2),
-            Window(content_control, height=10),
+            Window(content_control, height=25),
             Window(footer_control, height=2),
         ]))
 
