@@ -46,7 +46,6 @@ LOG_ENTRIES = list_all_log_data()
 current_selection = [0]
 
 def get_header():
-    stardate = f"{45000 + (datetime.now().timetuple().tm_yday / 10):.1f}"
     return FormattedText([
         ('class:gold', '█████████'),
         ('', ' '),
@@ -124,7 +123,7 @@ editor = TextArea(
     text="",
     multiline=True,
     wrap_lines=True,
-    height=6,
+    height=10,
 )
 
 editing = [False]
@@ -134,7 +133,7 @@ def get_layout():
         return Layout(HSplit([
             Window(header_control, height=2),
             Window(list_control, height=len(LOG_ENTRIES) + 2),
-            Window(content_control, height=8),
+            Window(content_control, height=25),
             Frame(editor, title="EDIT LOG ENTRY [Ctrl+S save, Esc cancel]"),
             Window(footer_control, height=2),
         ]))
@@ -162,7 +161,7 @@ def nav_down(event):
 def edit_entry(event):
     if not editing[0]:
         editing[0] = True
-        editor.text = LOG_ENTRIES[current_selection[0]][3]
+        editor.text = LOG_ENTRIES[current_selection[0]][2]
         event.app.layout = get_layout()
         event.app.layout.focus(editor)
 
