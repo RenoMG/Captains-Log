@@ -22,7 +22,7 @@ computer.logs_location = config_data["logs_location"]
 if computer.custom_MOTD == False:
     get_motd = motd[random.randrange(len(motd))]
 else: 
-        get_motd = computer.MOTD_text
+    get_motd = computer.MOTD_text
 
 motd_name = computer.name
 
@@ -58,6 +58,8 @@ def get_header():
         ('', '  '),
         ('class:stardate', f'JULIANDATE {convert_date_to_julian()}'),
         ('', '\n'),
+        ('class:title', f'MOTD: {textwrap.shorten(get_motd.format(captain_name=motd_name), width=60, placeholder="..." )}\n\n'),
+        ('', '\n'),
     ])
 
 def get_log_list():
@@ -72,7 +74,7 @@ def get_log_list():
             style = 'class:data'
         
         lines.append(marker)
-        lines.append((style, f'{"Enterprise NX-01":<16} JULIANDATE {jd}  {computer.name}\n'))
+        lines.append((style, f'{f"{textwrap.shorten('Enterprise NX-01', width=17, placeholder="..." )}"} JULIANDATE {jd}  {computer.name}\n'))
     
     lines.append(('class:title', '╰───────────────────────────────────────────────╯'))
     return FormattedText(lines)
@@ -86,8 +88,9 @@ def get_log_content():
         ('', ' '),
         ('class:blue', '██████████████████████'),
         ('', '\n\n'),
-        ('class:title', f'  Captain\'s Log - Juliandate {convert_date_to_julian()}\n'),
-        ('class:title', f'  {"Enterprise NX-01"}\n\n'),
+        ('class:title', f'  Title: {textwrap.shorten(title, width=40, placeholder="..." )}\n'),
+        ('class:title', f'  Juliandate: {jd}\n'),
+        ('class:title', f'  {f"Ship: {textwrap.shorten('Enterprise NX-01', width=40, placeholder="..." )}"}\n\n'),
         ('class:title', f'  {"Log Excerpt:"}\n\n'),
         ('class:title', '╭───────────────────────────────────────────────╮\n'),
         ('class:data', f'  {textwrap.fill(body, width=45, placeholder=" ...", replace_whitespace=False)}\n')
