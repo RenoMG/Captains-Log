@@ -50,6 +50,8 @@ LOG_ENTRIES = [
     ("42587.2", "D. VARLEY", "USS YAMATO", "System malfunctions continue..."),
 ]
 
+print(list_log_data())
+
 current_selection = [0]
 
 def get_header():

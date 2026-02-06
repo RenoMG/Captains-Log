@@ -51,6 +51,19 @@ def list_log_names():
 
     return titles
 
+def list_all_log_data():
+    config_data = load_data()
+
+    l = Path(config_data["logs_location"])
+
+    db_file = sqlite3.connect(l / LOGS_DB)
+    cursor = db_file.cursor()
+
+    cursor.execute("""SELECT title, date, body FROM logs""")
+    get_all = cursor.fetchall()
+
+    return get_all
+
 def edit_log(title):
     try:
         config_data = load_data()
