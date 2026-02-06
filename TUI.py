@@ -5,7 +5,8 @@ from prompt_toolkit.key_binding import KeyBindings
 from prompt_toolkit.formatted_text import FormattedText
 from prompt_toolkit.styles import Style
 from datetime import datetime
-import os, random, subprocess, webbrowser, textwrap, sys
+from prompt_toolkit.filters import Condition
+import random, webbrowser, textwrap
 from functions import *
 from classes import computer_logic
 from data_processor import *
@@ -147,17 +148,22 @@ def get_layout():
 
 kb = KeyBindings()
 
-@kb.add('up')
+@Condition
+def editing_active():
+    if editing[0]:
+        return False
+    else:
+        return True
+
+@kb.add('up', filter=editing_active)
 def nav_up(event):
-    if not editing[0]:
-        current_selection[0] = max(0, current_selection[0] - 1)
+    current_selection[0] = max(0, current_selection[0] - 1)
 
-@kb.add('down')
+@kb.add('down', filter=editing_active)
 def nav_down(event):
-    if not editing[0]:
-        current_selection[0] = min(len(LOG_ENTRIES) - 1, current_selection[0] + 1)
+    current_selection[0] = min(len(LOG_ENTRIES) - 1, current_selection[0] + 1)
 
-@kb.add('e')
+@kb.add('e', filter=editing_active)
 def edit_entry(event):
     if not editing[0]:
         editing[0] = True
@@ -179,21 +185,18 @@ def cancel_edit(event):
         editing[0] = False
         event.app.layout = get_layout()
 
-@kb.add('n')
+@kb.add('n', filter=editing_active)
 def new_entry(event):
-    if not editing[0]:
-        stardate = f"{45000 + (datetime.now().timetuple().tm_yday / 10):.1f}"
-        LOG_ENTRIES.insert(0, (stardate, "J.L. PICARD", "USS ENTERPRISE", "New log entry..."))
-        current_selection[0] = 0
-        editing[0] = True
-        editor.text = "New log entry..."
-        event.app.layout = get_layout()
-        event.app.layout.focus(editor)
+    stardate = f"{45000 + (datetime.now().timetuple().tm_yday / 10):.1f}"
+    LOG_ENTRIES.insert(0, (stardate, "J.L. PICARD", "USS ENTERPRISE", "New log entry..."))
+    current_selection[0] = 0
+    editor.text = "New log entry..."
+    event.app.layout = get_layout()
+    event.app.layout.focus(editor)
 
-@kb.add('q')
+@kb.add('q', filter=editing_active)
 def quit_app(event):
-    if not editing[0]:
-        event.app.exit()
+    event.app.exit()
 
 app = Application(
     layout=get_layout(),
