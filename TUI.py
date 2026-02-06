@@ -5,6 +5,26 @@ from prompt_toolkit.key_binding import KeyBindings
 from prompt_toolkit.formatted_text import HTML, FormattedText
 from prompt_toolkit.styles import Style
 from datetime import datetime
+import os, random, subprocess, webbrowser
+from functions import *
+from classes import computer_logic
+from data_processor import *
+
+# Setup Instance Variables for the menu
+config_data = load_data()
+computer = computer_logic()
+computer.name = config_data["name"]
+computer.custom_MOTD = config_data["custom_MOTD_enabled"]
+computer.MOTD_text = config_data["custom_motd"]
+computer.editor = config_data["editor"]
+computer.logs_location = config_data["logs_location"]
+
+if computer.custom_MOTD == False:
+    get_motd = motd[random.randrange(len(motd))]
+else: 
+        get_motd = computer.MOTD_text
+
+motd_name = computer.name
 
 # LCARS color scheme
 LCARS_STYLE = Style.from_dict({
