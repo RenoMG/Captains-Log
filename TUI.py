@@ -41,15 +41,6 @@ LCARS_STYLE = Style.from_dict({
     'border': '#cc99ff',                        # Border color
 })
 
-# Sample log entries (à la USS Yamato)
-LOG_ENTRIES_OLD = [
-    ("45236.4", "J.L. PICARD", "USS ENTERPRISE", "Arrived at Neutral Zone..."),
-    ("45234.1", "J.L. PICARD", "USS ENTERPRISE", "Diplomatic mission to Romulus..."),
-    ("45231.8", "J.L. PICARD", "USS ENTERPRISE", "Encountered anomaly near..."),
-    ("42591.4", "D. VARLEY", "USS YAMATO", "Discovered Iconian gateway..."),
-    ("42587.2", "D. VARLEY", "USS YAMATO", "System malfunctions continue..."),
-]
-
 LOG_ENTRIES = list_all_log_data()
 
 current_selection = [0]
