@@ -42,7 +42,7 @@ LCARS_STYLE = Style.from_dict({
 })
 
 # Sample log entries (à la USS Yamato)
-LOG_ENTRIES = [
+LOG_ENTRIES_OLD = [
     ("45236.4", "J.L. PICARD", "USS ENTERPRISE", "Arrived at Neutral Zone..."),
     ("45234.1", "J.L. PICARD", "USS ENTERPRISE", "Diplomatic mission to Romulus..."),
     ("45231.8", "J.L. PICARD", "USS ENTERPRISE", "Encountered anomaly near..."),
@@ -50,7 +50,7 @@ LOG_ENTRIES = [
     ("42587.2", "D. VARLEY", "USS YAMATO", "System malfunctions continue..."),
 ]
 
-print(list_log_data())
+LOG_ENTRIES = list_all_log_data()
 
 current_selection = [0]
 
@@ -72,7 +72,7 @@ def get_header():
 def get_log_list():
     lines = [('class:title', '╭─── ACCESS FILE = CAPTAIN\'S LOG ───────────────╮\n')]
     
-    for i, (sd, captain, ship, _) in enumerate(LOG_ENTRIES):
+    for i, (title, jd, _) in enumerate(LOG_ENTRIES):
         if i == current_selection[0]:
             marker = ('class:status-on', ' ● ')
             style = 'class:text bold'
@@ -81,23 +81,23 @@ def get_log_list():
             style = 'class:data'
         
         lines.append(marker)
-        lines.append((style, f'{ship:<16} STARDATE {sd}  {captain}\n'))
+        lines.append((style, f'{"ship":<16} JULIANDATE {jd}  {computer.name}\n'))
     
     lines.append(('class:title', '╰────────────────────────────────────────────────╯'))
     return FormattedText(lines)
 
 def get_log_content():
-    sd, captain, ship, content = LOG_ENTRIES[current_selection[0]]
+    title, jd, body = LOG_ENTRIES[current_selection[0]]
     return FormattedText([
         ('class:gold', '████'),
         ('', ' '),
-        ('class:header', f' {captain} '),
+        ('class:header', f' {computer.name} '),
         ('', ' '),
         ('class:blue', '██████████████████████'),
         ('', '\n\n'),
-        ('class:title', f'  Captain\'s Log - Stardate {sd}\n'),
-        ('class:title', f'  {ship}\n\n'),
-        ('class:data', f'  {content}\n'),
+        ('class:title', f'  Captain\'s Log - Juliandate {convert_date_to_julian()}\n'),
+        ('class:title', f'  {"ship"}\n\n'),
+        ('class:data', f'  {body}\n'),
         ('', '\n'),
         ('class:gold', '██'),
         ('', ' '),
