@@ -62,11 +62,17 @@ def get_header():
         ('', '\n'),
     ])
 
+scroll_offset = [0]
+max_visible = 15
+
 def get_log_list():
     lines = [('class:title', '╭─── ACCESS FILE = CAPTAIN\'S LOG ───────────────╮\n')]
+
+    visible_entries = LOG_ENTRIES[scroll_offset[0]:scroll_offset[0] + max_visible]
     
-    for i, (title, jd, _) in enumerate(LOG_ENTRIES):
-        if i == current_selection[0]:
+    for i, (title, jd, _) in enumerate(visible_entries):
+        actual_index = i + scroll_offset[0]
+        if actual_index == current_selection[0]:
             marker = ('class:status-on', ' ● ')
             style = 'class:text bold'
         else:
@@ -76,7 +82,8 @@ def get_log_list():
         lines.append(marker)
         lines.append((style, f'{f"{textwrap.shorten('Enterprise NX-01', width=17, placeholder="..." )}"} JULIANDATE {jd}  {computer.name}\n'))
     
-    lines.append(('class:title', '╰───────────────────────────────────────────────╯'))
+    total = len(LOG_ENTRIES)
+    lines.append(('class:title', f'╰─── {scroll_offset[0]+1}-{min(scroll_offset[0]+max_visible, total)} of {total} LOGS ─────────────────────────────╯'))
     return FormattedText(lines)
 
 def get_log_content():
@@ -139,19 +146,25 @@ creating_log = [False]
 
 new_log_title_temp = ''
 
+def refresh_logs(app):
+    """Reload from DB and refresh display"""
+    global LOG_ENTRIES
+    LOG_ENTRIES = list_all_log_data()
+    app.invalidate()  # Forces a redraw
+
 def get_layout():
     if editing[0]:
         return Layout(HSplit([
             Window(header_control, height=2),
-            Window(list_control, height=len(LOG_ENTRIES) + 2),
-            Window(content_control, height=6),
+            Window(list_control, height=max_visible + 3),
+            Window(content_control, height=7),
             Frame(editor, title="EDIT LOG ENTRY [Ctrl+S save, Esc cancel]"),
             Window(footer_control, height=2),
         ]))
     elif editing_title[0]:
         return Layout(HSplit([
             Window(header_control, height=2),
-            Window(list_control, height=len(LOG_ENTRIES) + 2),
+            Window(list_control, height=max_visible + 3),
             Window(content_control, height=6),
             Frame(editor_title, title="EDIT TITLE [Ctrl+S save, Esc cancel]"),
             Window(footer_control, height=2),
@@ -159,7 +172,7 @@ def get_layout():
     elif creating_log[0]:
         return Layout(HSplit([
             Window(header_control, height=2),
-            Window(list_control, height=len(LOG_ENTRIES) + 2),
+            Window(list_control, height=max_visible + 3),
             Window(content_control, height=6),
             Frame(editor_title, title="CREATE TITLE [Ctrl+S save, Esc cancel]"),
             Window(footer_control, height=2),
@@ -167,7 +180,7 @@ def get_layout():
     else:
         return Layout(HSplit([
             Window(header_control, height=2),
-            Window(list_control, height=len(LOG_ENTRIES) + 2),
+            Window(list_control, height=max_visible + 3),
             Window(content_control, height=25),
             Window(footer_control, height=2),
         ]))
@@ -176,7 +189,7 @@ kb = KeyBindings()
 
 @Condition
 def editing_active():
-    if editing[0] or editing_title[0]:
+    if editing[0] or editing_title[0] or creating_log[0]:
         return False
     else:
         return True
@@ -184,16 +197,19 @@ def editing_active():
 @kb.add('up', filter=editing_active)
 def nav_up(event):
     current_selection[0] = max(0, current_selection[0] - 1)
+    if current_selection[0] < scroll_offset[0]:
+        scroll_offset[0] = current_selection[0]
 
 @kb.add('down', filter=editing_active)
 def nav_down(event):
     current_selection[0] = min(len(LOG_ENTRIES) - 1, current_selection[0] + 1)
+    if current_selection[0] >= scroll_offset[0] + max_visible:
+        scroll_offset[0] = current_selection[0] - max_visible + 1
 
 @kb.add('e', filter=editing_active)
 def edit_entry(event):
     if not editing[0]:
         editing[0] = True
-        editor_title.text = LOG_ENTRIES[current_selection[0]][0]
         editor.text = LOG_ENTRIES[current_selection[0]][2]
         event.app.layout = get_layout()
         event.app.layout.focus(editor)
@@ -212,19 +228,20 @@ def save_entry(event):
     if editing[0]:
         editor.title = LOG_ENTRIES[current_selection[0]][0]
         edit_log(editor.title, editor.text)
+        refresh_logs(event.app)
         editing[0] = False
         event.app.layout = get_layout()
 
     if editing_title[0]:
-        editor.text = LOG_ENTRIES[current_selection[0]][2]
         editor.title = LOG_ENTRIES[current_selection[0]][0]
-        edit_log(editor.title, editor.text)
+        edit_log_title(editor.title, editor_title.text)
+        refresh_logs(event.app)
         editing_title[0] = False
         event.app.layout = get_layout()
 
     if creating_log[0]:
-        editor.title = LOG_ENTRIES[current_selection[0]][0]
-        create_log(editor.title, convert_date_to_julian())
+        create_log(editor_title.text, convert_date_to_julian())
+        refresh_logs(event.app)
         creating_log[0] = False
         event.app.layout = get_layout()
 

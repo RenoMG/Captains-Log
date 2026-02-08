@@ -98,9 +98,13 @@ def create_log(title, get_date_conversion):
 
     for log_title in list_log_names():
         if title == log_title:
-            print("ERROR: Log entry with that title already present!")
-            input()
-            return
+            if title.endswith("Copy") != True and title[-3].endswith("-") != True:
+                title += " Copy"
+            elif title.endswith("Copy"):
+                title += " - 1"
+            elif title[-1].isdigit():
+                num = int(title[-1]) + 1
+                title = title[:-1] + f"{num}"
 
     config_data = load_data()
     l = Path(config_data["logs_location"])
