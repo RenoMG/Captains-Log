@@ -174,7 +174,7 @@ def get_layout():
             Window(header_control, height=2),
             Window(list_control, height=max_visible + 3),
             Window(content_control, height=6),
-            Frame(editor_title, title="CREATE TITLE [Ctrl+S save, Esc cancel]"),
+            Frame(editor_title, title="CREATE LOG - TITLE [Ctrl+S save, Esc cancel]"),
             Window(footer_control, height=2),
         ]))      
     else:
@@ -253,6 +253,10 @@ def cancel_edit(event):
 
     if editing_title[0]:
         editing_title[0] = False
+        event.app.layout = get_layout()
+
+    if creating_log[0]:
+        creating_log[0] = False
         event.app.layout = get_layout()
 
 @kb.add('n', filter=editing_active)
