@@ -122,6 +122,21 @@ def create_log(title, get_date_conversion):
     )
 
     db_file.commit()
+
+def delete_log(title):
+    try:
+        config_data = load_data()
+
+        l = Path(config_data["logs_location"])
+
+        db_file = sqlite3.connect(l / LOGS_DB)
+        cursor = db_file.cursor()
+
+        cursor.execute("""DELETE FROM logs WHERE title=?""", (title,))
+        db_file.commit()
+    except Exception as e:
+        print(f"Uh oh.. something went wrong... I was not able to edit the log! ERROR: {e}")
+        input()
      
 
 # First boot data operations

@@ -55,8 +55,10 @@ def get_header():
         ('class:gold', '███'),
         ('', ' '),
         ('class:orange', '██'),
-        ('', '  '),
+        ('', ' '),
         ('class:stardate', f'JULIANDATE {convert_date_to_julian()}'),
+        ('', ' '),
+        ('class:orange', '█'),
         ('', '\n'),
         ('class:title', f'MOTD: {textwrap.shorten(get_motd.format(captain_name=motd_name), width=60, placeholder="..." )}\n\n'),
         ('', '\n'),
@@ -83,7 +85,8 @@ def get_log_list():
         lines.append((style, f'{f"{textwrap.shorten('Enterprise NX-01', width=17, placeholder="..." )}"} JULIANDATE {jd}  {computer.name}\n'))
     
     total = len(LOG_ENTRIES)
-    lines.append(('class:title', f'╰─── {scroll_offset[0]+1}-{min(scroll_offset[0]+max_visible, total)} of {total} LOGS ─────────────────────────────╯'))
+    lines.append(('class:title', f' ○ Showing {scroll_offset[0]+1}-{min(scroll_offset[0]+max_visible, total)} of {total} LOGS\n'))
+    lines.append(('class:title', f'╰───────────────────────────────────────────────╯'))
     return FormattedText(lines)
 
 def get_log_content():
@@ -111,13 +114,13 @@ def get_footer():
         ('', ' '),
         ('class:header', ' ↑↓ '),
         ('', ' SELECT  '),
-        ('class:header', ' E '),
+        ('class:header', ' E / R '),
         ('', ' EDIT  '),
         ('class:header', ' N '),
         ('', ' NEW  '),
         ('class:orange', ' Q '),
         ('', ' QUIT  '),
-        ('class:gold', '████████████████'),
+        ('class:gold', '████████████'),
     ])
 
 # Controls
@@ -206,20 +209,27 @@ def nav_down(event):
 
 @kb.add('e', filter=editing_active)
 def edit_entry(event):
-    if not editing[0]:
+    if not editing[0] and not editing_title[0] and not creating_log[0]:
         editing[0] = True
         editor.text = LOG_ENTRIES[current_selection[0]][2]
         event.app.layout = get_layout()
         event.app.layout.focus(editor)
 
-@kb.add('t', filter=editing_active)
+@kb.add('r', filter=editing_active)
 def edit_entry(event):
-    if not editing[0] and not editing_title[0]:
+    if not editing[0] and not editing_title[0] and not creating_log[0]:
         editing_title[0] = True
         editor_title.text = LOG_ENTRIES[current_selection[0]][0]
         editor.text = LOG_ENTRIES[current_selection[0]][2]
         event.app.layout = get_layout()
         event.app.layout.focus(editor_title)
+
+@kb.add('d', filter=editing_active)
+def edit_entry(event):
+    if not editing[0] and not editing_title[0] and not creating_log[0]:
+        delete_log(LOG_ENTRIES[current_selection[0]][0])
+        refresh_logs(event.app)
+        event.app.layout = get_layout()
 
 @kb.add('c-s')
 def save_entry(event):
@@ -263,6 +273,7 @@ def new_entry(event):
         creating_log[0] = True
         editor_title.text = "Set a Title"
         event.app.layout = get_layout()
+        refresh_logs(event.app)
         event.app.layout.focus(editor_title)
 
 
