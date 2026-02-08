@@ -144,8 +144,6 @@ editing = [False]
 editing_title = [False]
 creating_log = [False]
 
-new_log_title_temp = ''
-
 def refresh_logs(app):
     """Reload from DB and refresh display"""
     global LOG_ENTRIES
@@ -269,6 +267,10 @@ def new_entry(event):
 
 
 @kb.add('q', filter=editing_active)
+def quit_app(event):
+    event.app.exit()
+
+@kb.add('Q', filter=editing_active)
 def quit_app(event):
     event.app.exit()
 
