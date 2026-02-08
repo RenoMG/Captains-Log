@@ -118,9 +118,11 @@ def get_footer():
         ('', ' EDIT  '),
         ('class:header', ' N '),
         ('', ' NEW  '),
+        ('class:orange', ' D '),
+        ('', ' DEL '),
         ('class:orange', ' Q '),
         ('', ' QUIT  '),
-        ('class:gold', '████████████'),
+        ('class:gold', '███'),
     ])
 
 # Controls
