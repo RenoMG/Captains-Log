@@ -93,7 +93,7 @@ def get_log_content():
         ('class:title', f'  {f"Ship: {textwrap.shorten('Enterprise NX-01', width=40, placeholder="..." )}"}\n\n'),
         ('class:title', f'  {"Log Excerpt:"}\n\n'),
         ('class:title', '╭───────────────────────────────────────────────╮\n'),
-        ('class:data', f'  {textwrap.fill(body, width=45, placeholder=" ...", replace_whitespace=False)}\n')
+        ('class:data', f'{textwrap.indent(textwrap.fill(body, width=45, placeholder=" ...", replace_whitespace=False), "  ")}\n')
     ])
 
 def get_footer():
