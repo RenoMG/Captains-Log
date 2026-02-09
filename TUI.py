@@ -244,14 +244,14 @@ def edit_entry(event):
     if not editing[0] and not editing_title[0] and not creating_log[0] and not deleting_log[0]:
         global status_message
         deleting_log[0] = True
-        status_message = f"Delete Log? Title: {textwrap.shorten(LOG_ENTRIES[current_selection[0]][0], width=40, placeholder="..." )}"
+        status_message = f"Delete Log? Title: {textwrap.shorten(LOG_ENTRIES[current_selection[0]][0], width=23, placeholder="..." )}"
         event.app.layout = get_layout()
 
 @kb.add('y', filter=delete_confirm)
 def confirm_yes(event):
     if not editing[0] and not editing_title[0] and not creating_log[0]:
         global status_message
-        status_message = f"Deleted Log. Title: {textwrap.shorten(LOG_ENTRIES[current_selection[0]][0], width=40, placeholder="..." )}"
+        status_message = f"Deleted Log. Title: {textwrap.shorten(LOG_ENTRIES[current_selection[0]][0], width=23, placeholder="..." )}"
         delete_log(LOG_ENTRIES[current_selection[0]][0])
         refresh_logs(event.app)
         deleting_log[0] = False
@@ -265,11 +265,13 @@ def confirm_no(event):
 
 @kb.add('c-s')
 def save_entry(event):
+    global status_message
     if editing[0]:
         editor.title = LOG_ENTRIES[current_selection[0]][0]
         edit_log(editor.title, editor.text)
         refresh_logs(event.app)
         editing[0] = False
+        status_message = f"Edited Log. Title: {textwrap.shorten(editor.title, width=23, placeholder="..." )}"
         event.app.layout = get_layout()
 
     if editing_title[0]:
@@ -277,12 +279,14 @@ def save_entry(event):
         edit_log_title(editor.title, editor_title.text)
         refresh_logs(event.app)
         editing_title[0] = False
+        status_message = f"Edited Title. Old: {textwrap.shorten(editor.title, width=14, placeholder="..." )} / New: {textwrap.shorten(editor_title.text, width=14, placeholder="..." )}"
         event.app.layout = get_layout()
 
     if creating_log[0]:
         create_log(editor_title.text, convert_date_to_julian())
         refresh_logs(event.app)
         creating_log[0] = False
+        status_message = f"Created Log. Title: {textwrap.shorten(editor_title.text, width=23, placeholder="..." )}"
         event.app.layout = get_layout()
 
 @kb.add('escape')
