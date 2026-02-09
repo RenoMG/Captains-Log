@@ -4,6 +4,7 @@ from prompt_toolkit.widgets import TextArea, Frame
 from prompt_toolkit.key_binding import KeyBindings
 from prompt_toolkit.formatted_text import FormattedText
 from prompt_toolkit.styles import Style
+from prompt_toolkit.shortcuts import yes_no_dialog
 from datetime import datetime
 from prompt_toolkit.filters import Condition
 import random, webbrowser, textwrap
@@ -42,9 +43,20 @@ LCARS_STYLE = Style.from_dict({
     'border': '#cc99ff',                        # Border color
 })
 
+#TUI Variables
 LOG_ENTRIES = list_all_log_data()
 
 current_selection = [0]
+
+scroll_offset = [0]
+max_visible = 15
+
+editing = [False]
+editing_title = [False]
+creating_log = [False]
+deleting_log = [False]
+
+status_message = "Boot Success!"
 
 def get_header():
     return FormattedText([
@@ -63,9 +75,6 @@ def get_header():
         ('class:title', f'MOTD: {textwrap.shorten(get_motd.format(captain_name=motd_name), width=60, placeholder="..." )}\n\n'),
         ('', '\n'),
     ])
-
-scroll_offset = [0]
-max_visible = 15
 
 def get_log_list():
     lines = [('class:title', '╭─── ACCESS FILE = CAPTAIN\'S LOG ───────────────╮\n')]
@@ -108,7 +117,8 @@ def get_log_content():
 
 def get_footer():
     return FormattedText([
-        ('class:title', '╰───────────────────────────────────────────────╯'),
+        ('class:title', '╰───────────────────────────────────────────────╯\n'),
+        ('class:title', f'  Status: {status_message}\n'),
         ('', '\n'),
         ('class:gold', '███████'),
         ('', ' '),
@@ -116,7 +126,7 @@ def get_footer():
         ('', ' SELECT  '),
         ('class:header', ' E / R '),
         ('', ' EDIT  '),
-        ('class:header', ' N '),
+        ('class:header', ' C '),
         ('', ' NEW  '),
         ('class:orange', ' D '),
         ('', ' DEL '),
@@ -145,10 +155,6 @@ editor = TextArea(
     height=16,
 )
 
-editing = [False]
-editing_title = [False]
-creating_log = [False]
-
 def refresh_logs(app):
     """Reload from DB and refresh display"""
     global LOG_ENTRIES
@@ -160,9 +166,9 @@ def get_layout():
         return Layout(HSplit([
             Window(header_control, height=2),
             Window(list_control, height=max_visible + 3),
-            Window(content_control, height=7),
+            Window(content_control, height=5),
             Frame(editor, title="EDIT LOG ENTRY [Ctrl+S save, Esc cancel]"),
-            Window(footer_control, height=2),
+            Window(footer_control, height=4),
         ]))
     elif editing_title[0]:
         return Layout(HSplit([
@@ -170,7 +176,7 @@ def get_layout():
             Window(list_control, height=max_visible + 3),
             Window(content_control, height=6),
             Frame(editor_title, title="EDIT TITLE [Ctrl+S save, Esc cancel]"),
-            Window(footer_control, height=2),
+            Window(footer_control, height=4),
         ]))      
     elif creating_log[0]:
         return Layout(HSplit([
@@ -178,14 +184,14 @@ def get_layout():
             Window(list_control, height=max_visible + 3),
             Window(content_control, height=6),
             Frame(editor_title, title="CREATE LOG - TITLE [Ctrl+S save, Esc cancel]"),
-            Window(footer_control, height=2),
+            Window(footer_control, height=4),
         ]))      
     else:
         return Layout(HSplit([
             Window(header_control, height=2),
             Window(list_control, height=max_visible + 3),
-            Window(content_control, height=25),
-            Window(footer_control, height=2),
+            Window(content_control, height=23),
+            Window(footer_control, height=4),
         ]))
 
 kb = KeyBindings()
@@ -193,6 +199,13 @@ kb = KeyBindings()
 @Condition
 def editing_active():
     if editing[0] or editing_title[0] or creating_log[0]:
+        return False
+    else:
+        return True
+    
+@Condition
+def delete_confirm():
+    if deleting_log[0] == False:
         return False
     else:
         return True
@@ -211,7 +224,7 @@ def nav_down(event):
 
 @kb.add('e', filter=editing_active)
 def edit_entry(event):
-    if not editing[0] and not editing_title[0] and not creating_log[0]:
+    if not editing[0] and not editing_title[0] and not creating_log[0] and not deleting_log[0]:
         editing[0] = True
         editor.text = LOG_ENTRIES[current_selection[0]][2]
         event.app.layout = get_layout()
@@ -219,7 +232,7 @@ def edit_entry(event):
 
 @kb.add('r', filter=editing_active)
 def edit_entry(event):
-    if not editing[0] and not editing_title[0] and not creating_log[0]:
+    if not editing[0] and not editing_title[0] and not creating_log[0] and not deleting_log[0]:
         editing_title[0] = True
         editor_title.text = LOG_ENTRIES[current_selection[0]][0]
         editor.text = LOG_ENTRIES[current_selection[0]][2]
@@ -228,10 +241,27 @@ def edit_entry(event):
 
 @kb.add('d', filter=editing_active)
 def edit_entry(event):
+    if not editing[0] and not editing_title[0] and not creating_log[0] and not deleting_log[0]:
+        global status_message
+        deleting_log[0] = True
+        status_message = f"Delete Log? Title: {textwrap.shorten(LOG_ENTRIES[current_selection[0]][0], width=40, placeholder="..." )}"
+        event.app.layout = get_layout()
+
+@kb.add('y', filter=delete_confirm)
+def confirm_yes(event):
     if not editing[0] and not editing_title[0] and not creating_log[0]:
+        global status_message
+        status_message = f"Deleted Log. Title: {textwrap.shorten(LOG_ENTRIES[current_selection[0]][0], width=40, placeholder="..." )}"
         delete_log(LOG_ENTRIES[current_selection[0]][0])
         refresh_logs(event.app)
-        event.app.layout = get_layout()
+        deleting_log[0] = False
+
+@kb.add('n', filter=delete_confirm)
+def confirm_no(event):
+    if not editing[0] and not editing_title[0] and not creating_log[0]:
+        global status_message
+        deleting_log[0] = False
+        status_message = "Log Deletion Aborted!"
 
 @kb.add('c-s')
 def save_entry(event):
@@ -269,9 +299,9 @@ def cancel_edit(event):
         creating_log[0] = False
         event.app.layout = get_layout()
 
-@kb.add('n', filter=editing_active)
+@kb.add('c', filter=editing_active)
 def new_entry(event):
-    if not editing[0] and not editing_title[0] and not creating_log[0]:
+    if not editing[0] and not editing_title[0] and not creating_log[0] and not deleting_log[0]:
         creating_log[0] = True
         editor_title.text = "Set a Title"
         event.app.layout = get_layout()
