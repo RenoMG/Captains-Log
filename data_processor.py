@@ -139,6 +139,34 @@ def delete_log(title):
         input()
      
 
+# Functions for moving storage location if DB not exist
+def create_new_db(logs_location, get_date_conversion):
+
+    logs = Path(logs_location)
+
+    # Create database on first boot
+    db_file = sqlite3.connect(logs / LOGS_DB)
+    cursor = db_file.cursor()
+
+    cursor.execute(
+        """CREATE TABLE IF NOT EXISTS logs(
+                        title TEXT unique,
+                        date REAL,
+                        body TEXT
+        )"""
+    )
+
+    title = "Heyyyooo"
+    date = get_date_conversion
+    body = "This is a new database, did you move location?\n\nOld database should be at captains_log/storage/logs!"
+
+    cursor.execute(
+        """INSERT INTO logs(title, date, body) VALUES (?, ?, ?)""",
+        (title, date, body),
+    )
+
+    db_file.commit()
+
 # First boot data operations
 
 # Make dir on first boot

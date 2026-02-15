@@ -3,6 +3,8 @@ from astropy.time import Time
 from datetime import date
 from data_processor import *
 from pathlib import Path
+from prompt_toolkit.validation import Validator, ValidationError
+from prompt_toolkit import prompt
 
 def convert_date_to_julian():
     normal_date = date.today()
@@ -106,6 +108,19 @@ def init_logs_location_question():
     answer = inquirer.prompt(questions)
     print("\n")
     return answer
+
+class change_logs_location_question(Validator):
+    def validate(self, document):
+        text = document.text.strip()
+        p = Path(text)
+        if len(text) == 0:
+            raise ValidationError(
+                message="Please enter a value!"
+            )
+        if p.is_dir() == False:
+            raise ValidationError(
+                message="Path does not exist!"
+            )
 
 def MOTD_question():
     questions = [

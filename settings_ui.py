@@ -1,6 +1,6 @@
 from prompt_toolkit import Application
 from prompt_toolkit.layout import Layout, HSplit, Window, FormattedTextControl
-from prompt_toolkit.widgets import TextArea, Frame
+from prompt_toolkit.widgets import TextArea, Frame, RadioList
 from prompt_toolkit.key_binding import KeyBindings
 from prompt_toolkit.formatted_text import FormattedText
 from prompt_toolkit.styles import Style
@@ -24,6 +24,23 @@ else:
     get_motd = computer.MOTD_text
 
 motd_name = computer.name
+
+def refresh_logs(app):
+    global get_motd, motd_name, config_data, computer
+    config_data = load_data()
+    computer = computer_logic()
+    computer.name = config_data["name"]
+    computer.custom_MOTD = config_data["custom_MOTD_enabled"]
+    computer.MOTD_text = config_data["custom_motd"]
+    computer.logs_location = config_data["logs_location"]
+
+    if computer.custom_MOTD == False:
+        get_motd = motd[random.randrange(len(motd))]
+    else: 
+        get_motd = computer.MOTD_text
+
+    motd_name = computer.name
+    app.invalidate()  # Forces a redraw
 
 # LCARS color scheme
 LCARS_STYLE = Style.from_dict({
@@ -51,9 +68,7 @@ scroll_offset = [0]
 max_visible = 15
 
 editing = [False]
-editing_title = [False]
-creating_log = [False]
-deleting_log = [False]
+editing_location = [False]
 
 status_message = "Settings Loaded!"
 
@@ -145,31 +160,49 @@ header_control = FormattedTextControl(get_header)
 footer_control = FormattedTextControl(get_footer)
 
 # Editor (hidden initially)
-editor_title = TextArea(
+editor = TextArea(
     text="",
     multiline=False,
     height=1,
 )
 
-editor = TextArea(
+location_editor = TextArea(
     text="",
-    multiline=True,
-    wrap_lines=True,
-    height=16,
+    multiline=False,
+    height=1,
+    validator=change_logs_location_question()
 )
 
-def refresh_logs(app):
-    app.invalidate()  # Forces a redraw
+enable_disable = RadioList(
+    values=[(True, "Enable"), (False, "Disable")])
 
 def get_layout():
     if editing[0]:
-        return Layout(HSplit([
-            Window(header_control, height=2),
-            Window(list_control, height=max_visible + 3),
-            Window(content_control, height=5),
-            Frame(editor, title="EDIT LOG ENTRY [Ctrl+S save, Esc cancel]"),
-            Window(footer_control, height=4),
-        ]))   
+        if SETTINGS_ITEMS[current_selection[0]][2] == "custom_motd":
+            return Layout(HSplit([
+                Window(header_control, height=2),
+                Window(list_control, height=max_visible + 3),
+                Window(content_control, height=5),
+                Frame(editor, title="EDIT SETTING [Ctrl+S save, Esc cancel]"),
+                Frame(enable_disable, title="ENABLE CUSTOM MOTD [Mouse Input]"),
+                Window(footer_control, height=4),
+            ]))  
+        else:    
+            return Layout(HSplit([
+                Window(header_control, height=2),
+                Window(list_control, height=max_visible + 3),
+                Window(content_control, height=5),
+                Frame(editor, title="EDIT SETTING [Ctrl+S save, Esc cancel]"),
+                Window(footer_control, height=4),
+            ]))   
+    if editing_location[0]:
+            return Layout(HSplit([
+                Window(header_control, height=2),
+                Window(list_control, height=max_visible + 3),
+                Window(content_control, height=5),
+                Frame(location_editor, title="EDIT LOG LOCATION [Ctrl+S save, Esc cancel]"),
+                Window(footer_control, height=4),
+            ]))           
     else:
         return Layout(HSplit([
             Window(header_control, height=2),
@@ -182,14 +215,7 @@ kb = KeyBindings()
 
 @Condition
 def editing_active():
-    if editing[0]:
-        return False
-    else:
-        return True
-    
-@Condition
-def delete_confirm():
-    if deleting_log[0] == False:
+    if editing[0] or editing_location[0]:
         return False
     else:
         return True
@@ -208,51 +234,69 @@ def nav_down(event):
 
 @kb.add('e', filter=editing_active)
 def edit_entry(event):
-    if not editing[0] and not editing_title[0] and not creating_log[0] and not deleting_log[0]:
-        editing[0] = True
-        editor.text = SETTINGS_ITEMS[current_selection[0]][2]
-        event.app.layout = get_layout()
-        event.app.layout.focus(editor)
+    if not editing[0] and not editing_location[0]:
+        if SETTINGS_ITEMS[current_selection[0]][2] == "logs_location":
+            editing_location[0] = True
+            location_editor.text = config_data[SETTINGS_ITEMS[current_selection[0]][2]]
+            event.app.layout = get_layout()
+            event.app.layout.focus(location_editor)
+        else:
+            editing[0] = True
+            editor.text = config_data[SETTINGS_ITEMS[current_selection[0]][2]]
+            event.app.layout = get_layout()
+            event.app.layout.focus(editor)
 
 @kb.add('d', filter=editing_active)
 def edit_entry(event):
     if not editing[0] and not editing_title[0] and not creating_log[0] and not deleting_log[0]:
         global status_message
         deleting_log[0] = True
-        status_message = f"Delete Log: {textwrap.shorten(LOG_ENTRIES[current_selection[0]][0], width=23, placeholder="..." )}?"
+        status_message = f"Default set: {textwrap.shorten(LOG_ENTRIES[current_selection[0]][0], width=23, placeholder="..." )}?"
         event.app.layout = get_layout()
-
-@kb.add('y', filter=delete_confirm)
-def confirm_yes(event):
-    if not editing[0] and not editing_title[0] and not creating_log[0]:
-        global status_message
-        status_message = f"Deleted Log: {textwrap.shorten(LOG_ENTRIES[current_selection[0]][0], width=23, placeholder="..." )}"
-        delete_log(LOG_ENTRIES[current_selection[0]][0])
-        refresh_logs(event.app)
-        deleting_log[0] = False
-
-@kb.add('n', filter=delete_confirm)
-def confirm_no(event):
-    if not editing[0] and not editing_title[0] and not creating_log[0]:
-        global status_message
-        deleting_log[0] = False
-        status_message = "Log Deletion Aborted!"
 
 @kb.add('c-s')
 def save_entry(event):
     global status_message
     if editing[0]:
-        editor.title = LOG_ENTRIES[current_selection[0]][0]
-        edit_log(editor.title, editor.text)
-        refresh_logs(event.app)
-        editing[0] = False
-        status_message = f"Edited Log: {textwrap.shorten(editor.title, width=23, placeholder="..." )}"
-        event.app.layout = get_layout()
+        if SETTINGS_ITEMS[current_selection[0]][2] == "name":
+            computer.name = editor.text
+            config_data["name"] = editor.text
+            config_json_write(config_data)
+            refresh_logs(event.app)
+            editing[0] = False
+            status_message = f"Name Updated: {textwrap.shorten(editor.text, width=30, placeholder="..." )}"
+            event.app.layout = get_layout()
+        if SETTINGS_ITEMS[current_selection[0]][2] == "custom_motd":
+            computer.MOTD_text = editor.text
+            computer.custom_MOTD = enable_disable.current_value
+            config_data["custom_motd"] = editor.text
+            config_data["custom_MOTD_enabled"] = enable_disable.current_value
+            config_json_write(config_data)
+            refresh_logs(event.app)
+            editing[0] = False
+            status_message = f"MOTD Updated: {textwrap.shorten(editor.text, width=30, placeholder="..." )}"
+            event.app.layout = get_layout()
+    if editing_location[0]:
+        buffer = location_editor.buffer
+        if buffer.validate():
+            computer.logs_location = location_editor.text
+            config_data["logs_location"] = location_editor.text
+            config_json_write(config_data)
+            refresh_logs(event.app)
+            create_new_db(location_editor.text, convert_date_to_julian())
+            editing_location[0] = False
+            status_message = f"Log Location Updated: {textwrap.shorten(location_editor.text, width=30, placeholder="..." )}"
+            event.app.layout = get_layout()
+        else:
+            status_message = buffer.validation_error
 
 @kb.add('escape')
 def cancel_edit(event):
     if editing[0]:
         editing[0] = False
+        event.app.layout = get_layout()
+    if editing_location[0]:
+        editing_location[0] = False
         event.app.layout = get_layout()
 
 @kb.add('q', filter=editing_active)
