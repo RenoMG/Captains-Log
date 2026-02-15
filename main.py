@@ -7,8 +7,8 @@ def main():
         init_computer()
 
     if p.exists():
-        from menu import menu_init
+        from main_ui import run_main
         os.system("clear")
-        menu_init()
+        run_main()
 
 main()
