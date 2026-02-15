@@ -152,9 +152,7 @@ def run_settings():
             ('', ' DEFAULT '),
             ('class:orange', ' H '),
             ('', ' HOME '),
-            ('class:orange', ' Q '),
-            ('', ' QUIT  '),
-            ('class:gold', '███'),
+            ('class:gold', '█████'),
         ])
 
     # Controls
@@ -252,10 +250,31 @@ def run_settings():
 
     @kb.add('d', filter=editing_active)
     def edit_entry(event):
-        if not editing[0] and not editing_title[0] and not creating_log[0] and not deleting_log[0]:
-            global status_message
-            deleting_log[0] = True
-            status_message = f"Default set: {textwrap.shorten(LOG_ENTRIES[current_selection[0]][0], width=23, placeholder="..." )}?"
+        global status_message
+        if SETTINGS_ITEMS[current_selection[0]][2] == "name":
+            computer.name = "Captain"
+            config_data["name"] = "Captain"
+            config_json_write(config_data)
+            refresh_logs(event.app)
+            status_message = f"Name Updated: Captain"
+            event.app.layout = get_layout()
+        if SETTINGS_ITEMS[current_selection[0]][2] == "custom_motd":
+            computer.MOTD_text = "None"
+            computer.custom_MOTD = False
+            config_data["custom_motd"] = "None"
+            config_data["custom_MOTD_enabled"] = False
+            config_json_write(config_data)
+            refresh_logs(event.app)
+            status_message = f"MOTD Updated: Default MOTD"
+            event.app.layout = get_layout()
+
+        if SETTINGS_ITEMS[current_selection[0]][2] == "logs_location":
+            computer.logs_location = "storage/logs/"
+            config_data["logs_location"] = "storage/logs/"
+            config_json_write(config_data)
+            refresh_logs(event.app)
+            create_new_db(location_editor.text, convert_date_to_julian())
+            status_message = f"Log Location Updated: storage/logs/"
             event.app.layout = get_layout()
 
     @kb.add('c-s')
