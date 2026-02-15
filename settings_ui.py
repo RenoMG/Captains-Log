@@ -16,7 +16,6 @@ computer = computer_logic()
 computer.name = config_data["name"]
 computer.custom_MOTD = config_data["custom_MOTD_enabled"]
 computer.MOTD_text = config_data["custom_motd"]
-computer.editor = config_data["editor"]
 computer.logs_location = config_data["logs_location"]
 
 if computer.custom_MOTD == False:
@@ -42,9 +41,9 @@ LCARS_STYLE = Style.from_dict({
 })
 
 #TUI Variables
-SETTINGS_ITEMS = [("Set Name", "The Captain's Name! Captain for default,\n  or your own name!"), 
-                  ("Set MOTD", "The MOTD! Use a default set or set your own MOTD!\n  Use {captain_name} to use your name!"), 
-                  ("Set Logs Location", "Location to store Captain's Logs! Use the default or\n  your own location!")]
+SETTINGS_ITEMS = [("Set Name", "The Captain's Name! Captain for default,\n  or your own name!", "name"), 
+                  ("Set MOTD", "The MOTD! Use a default set or set your own MOTD!\n  Use {captain_name} to use your name!", "custom_motd"), 
+                  ("Set Logs Location", "Location to store Captain's Logs! Use the default or\n  your own location!", "logs_location")]
 
 current_selection = [0]
 
@@ -81,7 +80,7 @@ def get_settings_list():
 
     visible_entries = SETTINGS_ITEMS[scroll_offset[0]:scroll_offset[0] + max_visible]
     
-    for i, (setting, _) in enumerate(visible_entries):
+    for i, (setting, _, _) in enumerate(visible_entries):
         actual_index = i + scroll_offset[0]
         if actual_index == current_selection[0]:
             marker = ('class:status-on', ' ● ')
@@ -98,24 +97,28 @@ def get_settings_list():
     lines.append(('class:title', f'╰───────────────────────────────────────────────╯\n'))
     lines.append((f'class:data', 'Some helpful information:\n\n'))
     lines.append((f'class:data', 'Use {captain_name} to insert your name into a\ncustom MOTD!\n\n'))
-    lines.append((f'class:data', 'If you change the Logs location, you will have to\nmanually move your database file from the\ndefault location at /captains_log/storage/logs.\n\n'))
+    lines.append((f'class:data', 'If you change the Logs location, you will have to\nmanually move your database file from the\ndefault location at /captains_log/storage/logs.\nA new database will be created if none exist!\n\n'))
     lines.append((f'class:data', 'Stay safe among the stars!'))
     return FormattedText(lines)
 
 def get_setting_details():
     setting = SETTINGS_ITEMS[current_selection[0]]
-    return FormattedText([
-        ('class:gold', '████'),
-        ('', ' '),
-        ('class:header', f' CURRENT VALUES '),
-        ('', ' '),
-        ('class:blue', '██████████████████████'),
-        ('', '\n\n'),
-        ('class:title', f'  Setting: {setting[0]}\n'),
-        ('class:title', f'  {f"Details:\n  {setting[1]}"}\n\n'),
-        ('class:title', '╭───────────────────────────────────────────────╮\n'),
-        ('class:data', f'{textwrap.indent(textwrap.fill(setting[1], width=45, placeholder=" ...", replace_whitespace=False), "  ")}\n')
-    ])
+    lines = [('class:gold', '████')]
+
+    lines.append(('class:gold', '████'))
+    lines.append(('', ' '))
+    lines.append(('class:header', f' CURRENT VALUES '))
+    lines.append(('', ' '))
+    lines.append(('class:blue', '██████████████████████'))
+    lines.append(('', '\n\n'))
+    lines.append(('class:title', f'  Setting: {setting[0]}\n'))
+    lines.append(('class:title', f'  {f"Details:\n  {setting[1]}"}\n\n'))
+    lines.append(('class:title', '╭───────────────────────────────────────────────╮\n'))
+    lines.append(('class:data', f' Current Value:\n\n'))
+    lines.append(('class:data', f' "{config_data[setting[2]]}"\n\n'))
+    if setting[0] == "Set MOTD":
+        lines.append(('class:data', f' "Enabled: {config_data["custom_MOTD_enabled"]}"'))
+    return FormattedText(lines)
 
 def get_footer():
     return FormattedText([
@@ -126,12 +129,10 @@ def get_footer():
         ('', ' '),
         ('class:header', ' ↑↓ '),
         ('', ' SELECT  '),
-        ('class:header', ' E / R '),
+        ('class:header', ' E '),
         ('', ' EDIT  '),
-        ('class:header', ' C '),
-        ('', ' NEW  '),
         ('class:orange', ' D '),
-        ('', ' DEL '),
+        ('', ' DEFAULT '),
         ('class:orange', ' Q '),
         ('', ' QUIT  '),
         ('class:gold', '███'),
