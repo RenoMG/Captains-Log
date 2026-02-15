@@ -120,7 +120,7 @@ def run_main():
             ('class:title', '╰───────────────────────────────────────────────╯\n'),
             ('class:title', f'  Status: {status_message}\n'),
             ('', '\n'),
-            ('class:gold', '███████'),
+            ('class:gold', '█'),
             ('', ' '),
             ('class:header', ' ↑↓ '),
             ('', ' SELECT  '),
@@ -130,9 +130,11 @@ def run_main():
             ('', ' NEW  '),
             ('class:orange', ' D '),
             ('', ' DEL '),
+            ('class:orange', ' S '),
+            ('', ' SETTINGS  '),
             ('class:orange', ' Q '),
             ('', ' QUIT  '),
-            ('class:gold', '███'),
+            ('class:gold', '█'),
         ])
 
     # Controls

@@ -150,6 +150,8 @@ def run_settings():
             ('', ' EDIT  '),
             ('class:orange', ' D '),
             ('', ' DEFAULT '),
+            ('class:orange', ' H '),
+            ('', ' HOME '),
             ('class:orange', ' Q '),
             ('', ' QUIT  '),
             ('class:gold', '███'),
@@ -301,11 +303,11 @@ def run_settings():
             editing_location[0] = False
             event.app.layout = get_layout()
 
-    @kb.add('q', filter=editing_active)
+    @kb.add('h', filter=editing_active)
     def quit_app(event):
         event.app.exit()
 
-    @kb.add('Q', filter=editing_active)
+    @kb.add('H', filter=editing_active)
     def quit_app(event):
         event.app.exit()
 
