@@ -4,10 +4,8 @@ from prompt_toolkit.widgets import TextArea, Frame
 from prompt_toolkit.key_binding import KeyBindings
 from prompt_toolkit.formatted_text import FormattedText
 from prompt_toolkit.styles import Style
-from prompt_toolkit.shortcuts import yes_no_dialog
-from datetime import datetime
 from prompt_toolkit.filters import Condition
-import random, webbrowser, textwrap
+import random, textwrap
 from functions import *
 from classes import computer_logic
 from data_processor import *
@@ -276,11 +274,14 @@ def save_entry(event):
 
     if editing_title[0]:
         editor.title = LOG_ENTRIES[current_selection[0]][0]
-        edit_log_title(editor.title, editor_title.text)
-        refresh_logs(event.app)
-        editing_title[0] = False
-        status_message = f"Edited Title: Old: {textwrap.shorten(editor.title, width=14, placeholder="..." )} / New: {textwrap.shorten(editor_title.text, width=14, placeholder="..." )}"
-        event.app.layout = get_layout()
+        if editor_title.text in list_log_names():
+            status_message = f"Error: Title already exists!"
+        else:
+            edit_log_title(editor.title, editor_title.text)
+            refresh_logs(event.app)
+            editing_title[0] = False
+            status_message = f"Edited Title: Old: {textwrap.shorten(editor.title, width=14, placeholder="..." )} / New: {textwrap.shorten(editor_title.text, width=14, placeholder="..." )}"
+            event.app.layout = get_layout()
 
     if creating_log[0]:
         create_log(editor_title.text, convert_date_to_julian())
