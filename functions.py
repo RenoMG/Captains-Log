@@ -4,7 +4,6 @@ from datetime import date
 from data_processor import *
 from pathlib import Path
 from prompt_toolkit.validation import Validator, ValidationError
-from prompt_toolkit import prompt
 
 def convert_date_to_julian():
     normal_date = date.today()
