@@ -56,9 +56,15 @@ in an sqlite database.
 - Locally stored terminal fun with a prototype Star Trek computer!
 
 ## Images
-![Main UI](read_me_content/images/main_ui.png)
+<details>
+  <summary>Show Image</summary>
+  ![Main UI](read_me_content/images/main_ui.png)
+</details>
 
-![Settings UI](read_me_content/images/settings_ui.png)
+<details>
+  <summary>Show Image</summary>
+  ![Settings UI](read_me_content/images/settings_ui.png)
+</details>
 
 ## The Future
 
