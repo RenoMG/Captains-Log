@@ -99,21 +99,42 @@ def run_main():
         return FormattedText(lines)
 
     def get_log_content():
-        title, jd, body = LOG_ENTRIES[current_selection[0]]
-        return FormattedText([
-            ('class:gold', '████'),
-            ('', ' '),
-            ('class:header', f' {computer.name} '),
-            ('', ' '),
-            ('class:blue', '██████████████████████'),
-            ('', '\n\n'),
-            ('class:title', f'  Title: {textwrap.shorten(title, width=40, placeholder="..." )}\n'),
-            ('class:title', f'  Juliandate: {jd}\n'),
-            ('class:title', f'  {f"Ship: {textwrap.shorten('Enterprise NX-01', width=40, placeholder="..." )}"}\n\n'),
-            ('class:title', f'  {"Log Excerpt:"}\n\n'),
-            ('class:title', '╭───────────────────────────────────────────────╮\n'),
-            ('class:data', f'{textwrap.indent(textwrap.fill(body, width=45, placeholder=" ...", replace_whitespace=False), "  ")}\n')
-        ])
+        try: 
+            title, jd, body = LOG_ENTRIES[current_selection[0]]
+            return FormattedText([
+                ('class:gold', '████'),
+                ('', ' '),
+                ('class:header', f' {computer.name} '),
+                ('', ' '),
+                ('class:blue', '██████████████████████'),
+                ('', '\n\n'),
+                ('class:title', f'  Title: {textwrap.shorten(title, width=40, placeholder="..." )}\n'),
+                ('class:title', f'  Juliandate: {jd}\n'),
+                ('class:title', f'  {f"Ship: {textwrap.shorten('Enterprise NX-01', width=40, placeholder="..." )}"}\n\n'),
+                ('class:title', f'  {"Log Excerpt:"}\n\n'),
+                ('class:title', '╭───────────────────────────────────────────────╮\n'),
+                ('class:data', f'{textwrap.indent(textwrap.fill(body, width=45, placeholder=" ...", replace_whitespace=False), "  ")}\n')
+            ])
+        except Exception as e:
+            current_selection[0] = max(0, current_selection[0] - 1)
+            if current_selection[0] < scroll_offset[0]:
+                scroll_offset[0] = current_selection[0]
+            refresh_logs(main_app)
+            return FormattedText([
+                ('class:gold', '████'),
+                ('', ' '),
+                ('class:header', f' {computer.name} '),
+                ('', ' '),
+                ('class:blue', '██████████████████████'),
+                ('', '\n\n'),
+                ('class:title', f'  Title: A log in the void\n'),
+                ('class:title', f'  Juliandate: {convert_date_to_julian()}\n'),
+                ('class:title', f'  {f"Ship: {textwrap.shorten('Enterprise NX-01', width=40, placeholder="..." )}"}\n\n'),
+                ('class:title', f'  {"Log Excerpt:"}\n\n'),
+                ('class:title', '╭───────────────────────────────────────────────╮\n'),
+                ('class:data', f'{textwrap.indent(textwrap.fill("""Well, seems like you either just deleted your last log or have no logs at all? Hmm, better get to typing! You dont want me calling the Romulans, right?
+                                                                Does this count as an Easter Egg, or just bad programming?""", width=45, placeholder=" ...", replace_whitespace=False), "  ")}\n')
+            ])
 
     def get_footer():
         return FormattedText([
