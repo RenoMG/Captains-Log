@@ -28,7 +28,7 @@ def run_settings():
     motd_name = computer.name
 
     def refresh_logs(app):
-        global get_motd, motd_name, config_data, computer
+        nonlocal get_motd, motd_name, config_data, computer
         config_data = load_data()
         computer = computer_logic()
         computer.name = config_data["name"]
@@ -250,7 +250,7 @@ def run_settings():
 
     @kb.add('d', filter=editing_active)
     def edit_entry(event):
-        global status_message
+        nonlocal status_message
         if SETTINGS_ITEMS[current_selection[0]][2] == "name":
             computer.name = "Captain"
             config_data["name"] = "Captain"
@@ -279,7 +279,7 @@ def run_settings():
 
     @kb.add('c-s')
     def save_entry(event):
-        global status_message
+        nonlocal status_message
         if editing[0]:
             if SETTINGS_ITEMS[current_selection[0]][2] == "name":
                 computer.name = editor.text

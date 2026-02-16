@@ -157,11 +157,11 @@ def run_main():
         height=16,
     )
 
-    def refresh_logs(app):
+    def refresh_logs(main_app):
         """Reload from DB and refresh display"""
-        global LOG_ENTRIES
+        nonlocal LOG_ENTRIES
         LOG_ENTRIES = list_all_log_data()
-        app.invalidate()  # Forces a redraw
+        main_app.invalidate()  # Forces a redraw
 
     def get_layout():
         if editing[0]:
@@ -244,7 +244,7 @@ def run_main():
     @kb.add('d', filter=editing_active)
     def edit_entry(event):
         if not editing[0] and not editing_title[0] and not creating_log[0] and not deleting_log[0]:
-            global status_message
+            nonlocal status_message
             deleting_log[0] = True
             status_message = f"Delete Log: {textwrap.shorten(LOG_ENTRIES[current_selection[0]][0], width=23, placeholder="..." )}?"
             event.app.layout = get_layout()
@@ -252,7 +252,7 @@ def run_main():
     @kb.add('y', filter=delete_confirm)
     def confirm_yes(event):
         if not editing[0] and not editing_title[0] and not creating_log[0]:
-            global status_message
+            nonlocal status_message
             status_message = f"Deleted Log: {textwrap.shorten(LOG_ENTRIES[current_selection[0]][0], width=23, placeholder="..." )}"
             delete_log(LOG_ENTRIES[current_selection[0]][0])
             refresh_logs(event.app)
@@ -261,13 +261,13 @@ def run_main():
     @kb.add('n', filter=delete_confirm)
     def confirm_no(event):
         if not editing[0] and not editing_title[0] and not creating_log[0]:
-            global status_message
+            nonlocal status_message
             deleting_log[0] = False
             status_message = "Log Deletion Aborted!"
 
     @kb.add('c-s')
     def save_entry(event):
-        global status_message
+        nonlocal status_message
         if editing[0]:
             editor.title = LOG_ENTRIES[current_selection[0]][0]
             edit_log(editor.title, editor.text)
