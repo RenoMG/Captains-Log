@@ -178,8 +178,21 @@ def run_main():
         height=16,
     )
 
+    def refresh_config_data(main_app):
+        nonlocal get_motd, motd_name, config_data, computer
+        config_data = load_data()
+        computer = computer_logic()
+        computer.name = config_data["name"]
+        computer.custom_MOTD = config_data["custom_MOTD_enabled"]
+        computer.MOTD_text = config_data["custom_motd"]
+        computer.logs_location = config_data["logs_location"]
+
+        if computer.custom_MOTD == False:
+            get_motd = motd[random.randrange(len(motd))]
+        else: 
+            get_motd = computer.MOTD_text
+
     def refresh_logs(main_app):
-        """Reload from DB and refresh display"""
         nonlocal LOG_ENTRIES
         LOG_ENTRIES = list_all_log_data()
         main_app.invalidate()  # Forces a redraw
@@ -369,5 +382,6 @@ def run_main():
             settings = settings_app()  # calls run_settings(), returns Application
             result = settings.run()
             current = result if result else "main"  # default back to main
+            refresh_config_data(main_app)
         elif current == "quit":
             break

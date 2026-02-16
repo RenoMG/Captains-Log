@@ -27,7 +27,7 @@ def run_settings():
 
     motd_name = computer.name
 
-    def refresh_logs(app):
+    def refresh_config_data():
         nonlocal get_motd, motd_name, config_data, computer
         config_data = load_data()
         computer = computer_logic()
@@ -42,7 +42,6 @@ def run_settings():
             get_motd = computer.MOTD_text
 
         motd_name = computer.name
-        app.invalidate()  # Forces a redraw
 
     # LCARS color scheme
     LCARS_STYLE = Style.from_dict({
@@ -255,7 +254,7 @@ def run_settings():
             computer.name = "Captain"
             config_data["name"] = "Captain"
             config_json_write(config_data)
-            refresh_logs(event.app)
+            refresh_config_data()
             status_message = f"Name Updated: Captain"
             event.app.layout = get_layout()
         if SETTINGS_ITEMS[current_selection[0]][2] == "custom_motd":
@@ -264,7 +263,7 @@ def run_settings():
             config_data["custom_motd"] = "None"
             config_data["custom_MOTD_enabled"] = False
             config_json_write(config_data)
-            refresh_logs(event.app)
+            refresh_config_data()
             status_message = f"MOTD Updated: Default MOTD"
             event.app.layout = get_layout()
 
@@ -272,7 +271,7 @@ def run_settings():
             computer.logs_location = "storage/logs/"
             config_data["logs_location"] = "storage/logs/"
             config_json_write(config_data)
-            refresh_logs(event.app)
+            refresh_config_data()
             create_new_db(location_editor.text, convert_date_to_julian())
             status_message = f"Log Location Updated: storage/logs/"
             event.app.layout = get_layout()
@@ -285,7 +284,7 @@ def run_settings():
                 computer.name = editor.text
                 config_data["name"] = editor.text
                 config_json_write(config_data)
-                refresh_logs(event.app)
+                refresh_config_data()
                 editing[0] = False
                 status_message = f"Name Updated: {textwrap.shorten(editor.text, width=30, placeholder="..." )}"
                 event.app.layout = get_layout()
@@ -295,7 +294,7 @@ def run_settings():
                 config_data["custom_motd"] = editor.text
                 config_data["custom_MOTD_enabled"] = enable_disable.current_value
                 config_json_write(config_data)
-                refresh_logs(event.app)
+                refresh_config_data()
                 editing[0] = False
                 status_message = f"MOTD Updated: {textwrap.shorten(editor.text, width=30, placeholder="..." )}"
                 event.app.layout = get_layout()
@@ -305,7 +304,7 @@ def run_settings():
                 computer.logs_location = location_editor.text
                 config_data["logs_location"] = location_editor.text
                 config_json_write(config_data)
-                refresh_logs(event.app)
+                refresh_config_data()
                 create_new_db(location_editor.text, convert_date_to_julian())
                 editing_location[0] = False
                 status_message = f"Log Location Updated: {textwrap.shorten(location_editor.text, width=30, placeholder="..." )}"
