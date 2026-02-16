@@ -91,7 +91,7 @@ def run_main():
                 style = 'class:data'
             
             lines.append(marker)
-            lines.append((style, f'{f"{textwrap.shorten('Enterprise NX-01', width=17, placeholder="..." )}"} JULIANDATE {jd}  {computer.name}\n'))
+            lines.append((style, f'{f"{textwrap.shorten('Enterprise NX-01', width=17, placeholder="..." )}"} DATE {jd}  {f"{textwrap.shorten(computer.name, width=12, placeholder=f"{computer.name[:9]}..." )}"}\n'))
         
         total = len(LOG_ENTRIES)
         lines.append(('class:title', f' ○ Showing {scroll_offset[0]+1}-{min(scroll_offset[0]+max_visible, total)} of {total} LOGS\n'))
@@ -104,7 +104,7 @@ def run_main():
             return FormattedText([
                 ('class:gold', '████'),
                 ('', ' '),
-                ('class:header', f' {computer.name} '),
+                ('class:header', f' {textwrap.shorten(computer.name, width=25, placeholder=f"{computer.name[:20]}..." )} '),
                 ('', ' '),
                 ('class:blue', '██████████████████████'),
                 ('', '\n\n'),
@@ -123,7 +123,7 @@ def run_main():
             return FormattedText([
                 ('class:gold', '████'),
                 ('', ' '),
-                ('class:header', f' {computer.name} '),
+                ('class:header', f' {textwrap.shorten(computer.name, width=25, placeholder=f"{computer.name[:20]}..." )} '),
                 ('', ' '),
                 ('class:blue', '██████████████████████'),
                 ('', '\n\n'),
@@ -178,7 +178,7 @@ def run_main():
         height=16,
     )
 
-    def refresh_config_data(main_app):
+    def refresh_config_data():
         nonlocal get_motd, motd_name, config_data, computer
         config_data = load_data()
         computer = computer_logic()
@@ -382,6 +382,6 @@ def run_main():
             settings = settings_app()  # calls run_settings(), returns Application
             result = settings.run()
             current = result if result else "main"  # default back to main
-            refresh_config_data(main_app)
+            refresh_config_data()
         elif current == "quit":
             break
