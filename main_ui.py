@@ -18,7 +18,6 @@ def run_main():
     computer.name = config_data["name"]
     computer.custom_MOTD = config_data["custom_MOTD_enabled"]
     computer.MOTD_text = config_data["custom_motd"]
-    computer.editor = config_data["editor"]
     computer.logs_location = config_data["logs_location"]
 
     if computer.custom_MOTD == False:

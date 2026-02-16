@@ -21,19 +21,9 @@ def init_computer():
     computer.reply(f"Nice to meet you, {computer.name}!")
     computer.saving_state = False
 
-    computer.reply(f"Ok, {computer.name}. I don't have the functionality of a full text editor... I was never programmed with it.")
+    computer.reply(f"Ok, {computer.name}. I don't have the functionality of a full computer... I was never programmed with it.")
+    computer.reply(f"So, just keep in mind that voice input will not work...")
     computer.reply(f"I am actually a prototype of the computer that is on Captain Archer's Ship, the Enterprise NX-01!")
-    computer.reply(f"And, well... All I can do is store Captain logs... yeah. BUT! WAIT! DON'T GO!")
-    computer.reply(f"All you have to do is choose an external editor on your system and I can use that!")
-    computer.saving_state = True
-    get_editor = editor_question()
-    
-    if get_editor["editor"] == "Neovim":
-        computer.editor = "nvim"
-    else:
-        computer.editor = get_editor["editor"]
-    computer.reply(f"Ahh, {computer.editor}... nice!")
-    computer.saving_state = False
 
     computer.reply(f"Ok! Now, where do you want me to save your log's, {computer.name}?")
     computer.reply(f"Please make sure you enter the absolute path")
@@ -68,7 +58,6 @@ def init_computer():
         computer.saving_state = False   
 
     computer.reply("Ok! Everything is now set! Here is some useful information.")
-    computer.reply("I save titles and dates in the top two lines of each log.")
     computer.reply("Dates are stored in the Julian time format.")
     computer.reply("All files are stored locally and no data is transmitted from this secure terminal, unless you make a system for it.")
 
@@ -88,7 +77,6 @@ def init_computer():
         config = {"name": f"{computer.name}",
                 "custom_MOTD_enabled": computer.custom_MOTD,
                 "custom_motd": f"{computer.MOTD_text}",
-                "editor": f"{computer.editor.lower()}",
                 "logs_location": f"{computer.logs_location}"}
 
         config_json_write(config)
