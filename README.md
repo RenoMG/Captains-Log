@@ -58,11 +58,13 @@ in an sqlite database.
 ## Images
 <details>
   <summary>Show Image</summary>
+  
   ![Main UI](read_me_content/images/main_ui.png)
 </details>
 
 <details>
   <summary>Show Image</summary>
+  
   ![Settings UI](read_me_content/images/settings_ui.png)
 </details>
 
