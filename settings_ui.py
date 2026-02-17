@@ -280,7 +280,7 @@ def run_settings():
             config_data["logs_location"] = "storage/logs/"
             config_json_write(config_data)
             refresh_config_data()
-            create_new_db(convert_date_to_julian(), )
+            create_new_db(convert_date_to_julian(), NEW_DB_BODY)
             status_message = f"Log Location Updated: storage/logs/"
             event.app.layout = get_layout()
 
