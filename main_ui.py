@@ -25,6 +25,12 @@ def run_main():
     else: 
         get_motd = computer.MOTD_text
 
+    def check_motd_captain_name():
+        if "{captain_name}" in get_motd:
+            return get_motd.format(captain_name=motd_name)
+        else:
+            return get_motd
+
     motd_name = computer.name
 
     # LCARS color scheme
@@ -71,7 +77,7 @@ def run_main():
             ('', ' '),
             ('class:orange', '█'),
             ('', '\n'),
-            ('class:title', f'MOTD: {textwrap.shorten(get_motd.format(captain_name=motd_name), width=60, placeholder="..." )}\n\n'),
+            ('class:title', f'MOTD: {textwrap.shorten(check_motd_captain_name(), width=60, placeholder="..." )}\n\n'),
             ('', '\n'),
         ])
 
