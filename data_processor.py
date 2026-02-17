@@ -39,15 +39,19 @@ def list_log_names():
     l = Path(config_data["logs_location"])
 
     db_file = sqlite3.connect(l / LOGS_DB)
-    db_file.row_factory = sqlite3.Row
-    cursor = db_file.cursor()
+    try:
+        db_file.row_factory = sqlite3.Row
+        cursor = db_file.cursor()
 
-    cursor.execute("""SELECT title FROM logs""")
+        cursor.execute("""SELECT title FROM logs""")
 
-    titles = []
+        titles = []
 
-    for title in cursor:
-        titles.append(title[0])
+        for title in cursor:
+            titles.append(title[0])
+
+    finally:
+        db_file.close()
 
     return titles
 
@@ -57,42 +61,45 @@ def list_all_log_data():
     l = Path(config_data["logs_location"])
 
     db_file = sqlite3.connect(l / LOGS_DB)
-    cursor = db_file.cursor()
+    try: 
+        cursor = db_file.cursor()
 
-    cursor.execute("""SELECT title, date, body FROM logs""")
-    get_all = cursor.fetchall()
+        cursor.execute("""SELECT title, date, body FROM logs""")
+        get_all = cursor.fetchall()
+    finally:
+        db_file.close()
 
     return get_all
 
 def edit_log(title, body):
+    config_data = load_data()
+    l = Path(config_data["logs_location"])
+
+    db_file = sqlite3.connect(l / LOGS_DB)
     try:
-        config_data = load_data()
+        with db_file:
+            cursor = db_file.cursor()
 
-        l = Path(config_data["logs_location"])
-
-        db_file = sqlite3.connect(l / LOGS_DB)
-        cursor = db_file.cursor()
-
-        cursor.execute("""UPDATE logs SET body=? WHERE title=?""", (body, title))
-        db_file.commit()
+            cursor.execute("""UPDATE logs SET body=? WHERE title=?""", (body, title))
     except Exception as e:
         print(f"Uh oh.. something went wrong... I was not able to edit the log! ERROR: {e}")
-        input()
+    finally:
+        db_file.close()
 
 def edit_log_title(title_old, title_new):
+    config_data = load_data()
+    l = Path(config_data["logs_location"])
+
+    db_file = sqlite3.connect(l / LOGS_DB)
     try:
-        config_data = load_data()
+        with db_file:
+            cursor = db_file.cursor()
 
-        l = Path(config_data["logs_location"])
-
-        db_file = sqlite3.connect(l / LOGS_DB)
-        cursor = db_file.cursor()
-
-        cursor.execute("""UPDATE logs SET title=? WHERE title=?""", (title_new, title_old))
-        db_file.commit()
+            cursor.execute("""UPDATE logs SET title=? WHERE title=?""", (title_new, title_old))
     except Exception as e:
         print(f"Uh oh.. something went wrong... I was not able to edit the log! ERROR: {e}")
-        input()
+    finally:
+        db_file.close()
 
 def create_log(title, get_date_conversion):
 
@@ -109,64 +116,67 @@ def create_log(title, get_date_conversion):
     config_data = load_data()
     l = Path(config_data["logs_location"])
 
-    # Create db connection
     db_file = sqlite3.connect(l / LOGS_DB)
-    cursor = db_file.cursor()
+    try: 
+        with db_file:
+            cursor = db_file.cursor()
 
-    date = get_date_conversion
-    body = ""
+            date = get_date_conversion
+            body = ""
 
-    cursor.execute(
-        """INSERT INTO logs(title, date, body) VALUES (?, ?, ?)""",
-        (title, date, body),
-    )
+            cursor.execute(
+                """INSERT INTO logs(title, date, body) VALUES (?, ?, ?)""",
+                (title, date, body),
+            )
 
-    db_file.commit()
+    finally:
+        db_file.close()
 
 def delete_log(title):
+    config_data = load_data()
+    l = Path(config_data["logs_location"])
+
+    db_file = sqlite3.connect(l / LOGS_DB)
     try:
-        config_data = load_data()
+        with db_file:
+            cursor = db_file.cursor()
 
-        l = Path(config_data["logs_location"])
-
-        db_file = sqlite3.connect(l / LOGS_DB)
-        cursor = db_file.cursor()
-
-        cursor.execute("""DELETE FROM logs WHERE title=?""", (title,))
-        db_file.commit()
+            cursor.execute("""DELETE FROM logs WHERE title=?""", (title,))
     except Exception as e:
         print(f"Uh oh.. something went wrong... I was not able to edit the log! ERROR: {e}")
-        input()
+    finally:
+        db_file.close()
      
 
 # Functions for moving storage location if DB not exist
 def create_new_db(logs_location, get_date_conversion):
-
     logs = Path(logs_location)
 
-    # Create database on first boot
     db_file = sqlite3.connect(logs / LOGS_DB)
-    cursor = db_file.cursor()
 
-    cursor.execute(
-        """CREATE TABLE IF NOT EXISTS logs(
-                        title TEXT unique,
-                        date REAL,
-                        body TEXT
-        )"""
-    )
+    try:
+        with db_file:
+            cursor = db_file.cursor()
 
-    title = "Heyyyooo"
-    date = get_date_conversion
-    body = "This is a new database, did you move location?\n\nOld database should be at captains_log/storage/logs!"
+            cursor.execute(
+                """CREATE TABLE IF NOT EXISTS logs(
+                                title TEXT unique,
+                                date REAL,
+                                body TEXT
+                )"""
+            )
 
-    cursor.execute(
-        """INSERT INTO logs(title, date, body) VALUES (?, ?, ?)""",
-        (title, date, body),
-    )
+            title = "Heyyyooo"
+            date = get_date_conversion
+            body = "This is a new database, did you move location?\n\nOld database should be at captains_log/storage/logs!"
 
-    db_file.commit()
+            cursor.execute(
+                """INSERT INTO logs(title, date, body) VALUES (?, ?, ?)""",
+                (title, date, body),
+            )
 
+    finally:
+        db_file.close()
 # First boot data operations
 
 # Make dir on first boot
@@ -180,28 +190,30 @@ def first_boot_dir(logs_location):
 
 # Create database and insert example log
 def first_boot_db(contents, logs_location, get_date_conversion):
-
     logs = Path(logs_location)
 
-    # Create database on first boot
     db_file = sqlite3.connect(logs / LOGS_DB)
-    cursor = db_file.cursor()
 
-    cursor.execute(
-        """CREATE TABLE IF NOT EXISTS logs(
-                        title TEXT unique,
-                        date REAL,
-                        body TEXT
-        )"""
-    )
+    try: 
+        with db_file:
+            cursor = db_file.cursor()
 
-    title = "Heyyyooo"
-    date = get_date_conversion
-    body = contents
+            cursor.execute(
+                """CREATE TABLE IF NOT EXISTS logs(
+                                title TEXT unique,
+                                date REAL,
+                                body TEXT
+                )"""
+            )
 
-    cursor.execute(
-        """INSERT INTO logs(title, date, body) VALUES (?, ?, ?)""",
-        (title, date, body),
-    )
+            title = "Heyyyooo"
+            date = get_date_conversion
+            body = contents
 
-    db_file.commit()
+            cursor.execute(
+                """INSERT INTO logs(title, date, body) VALUES (?, ?, ?)""",
+                (title, date, body),
+            )
+
+    finally:
+        db_file.close()
