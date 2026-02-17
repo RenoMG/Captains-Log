@@ -79,6 +79,8 @@ def run_settings():
 
     status_message = "Settings Loaded!"
 
+    NEW_DB_BODY = "This is a new database, did you move location?\n\nOld database should be at captains_log/storage/logs!"
+
     def get_header():
         return FormattedText([
             ('class:gold', '█████████'),
@@ -278,7 +280,7 @@ def run_settings():
             config_data["logs_location"] = "storage/logs/"
             config_json_write(config_data)
             refresh_config_data()
-            create_new_db(location_editor.text, convert_date_to_julian())
+            create_new_db(convert_date_to_julian(), )
             status_message = f"Log Location Updated: storage/logs/"
             event.app.layout = get_layout()
 
@@ -311,7 +313,7 @@ def run_settings():
                 config_data["logs_location"] = location_editor.text
                 config_json_write(config_data)
                 refresh_config_data()
-                create_new_db(location_editor.text, convert_date_to_julian())
+                create_new_db(convert_date_to_julian(), NEW_DB_BODY)
                 editing_location[0] = False
                 status_message = f"Log Location Updated: {textwrap.shorten(location_editor.text, width=30, placeholder="..." )}"
                 event.app.layout = get_layout()

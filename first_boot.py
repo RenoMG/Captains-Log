@@ -2,6 +2,10 @@ from functions import *
 from classes import computer_logic
 from data_processor import *
 
+FIRST_BOOT_BODY=f"""On a far.. far away world... a computer from the Enterprise NX-01! Wait... OH YEAH THIS IS A DEMO LOG. Sorry, uhh so uhh yeah...\n\n
+        Logs are stored like this in text files, and the Julian date and name of the log are stored at the top.\n
+        My creator made this dinky little program while learning backend development, starting with PYTHON! I hope you find some joy in this!"""
+
 def init_computer():
     computer = computer_logic()
     computer.reply("Welcome Captain! Looks like this is your first time here!")
@@ -81,13 +85,7 @@ def init_computer():
 
         config_json_write(config)
 
-        get_date_conversion = convert_date_to_julian()
-
-        contents = f"""On a far.. far away world... a computer from the Enterprise NX-01! Wait... OH YEAH THIS IS A DEMO LOG. Sorry, uhh so uhh yeah...\n\n
-        Logs are stored like this in text files, and the Julian date and name of the log are stored at the top.\n
-        My creator made this dinky little program while learning backend development, starting with PYTHON! I hope you find some joy in this!"""
-
-        first_boot_db(contents, computer.logs_location, get_date_conversion)
+        create_new_db(convert_date_to_julian(), FIRST_BOOT_BODY)
 
     except Exception as e:
         print(f"Uh oh.. something went wrong... I was not able to create the startup files fully! ERROR: {e}")
