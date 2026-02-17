@@ -25,13 +25,13 @@ def run_main():
     else: 
         get_motd = computer.MOTD_text
 
+    motd_name = computer.name
+
     def check_motd_captain_name():
         if "{captain_name}" in get_motd:
             return get_motd.format(captain_name=motd_name)
         else:
             return get_motd
-
-    motd_name = computer.name
 
     # LCARS color scheme
     LCARS_STYLE = Style.from_dict({
