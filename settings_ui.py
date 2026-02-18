@@ -316,11 +316,11 @@ def run_settings():
             event.app.layout = get_layout()
 
     @kb.add('h', filter=editing_active)
-    def quit_app(event):
+    def go_home(event):
         event.app.exit()
 
     @kb.add('H', filter=editing_active)
-    def quit_app(event):
+    def go_home_uppercase(event):
         event.app.exit()
 
     settings_menu = Application(

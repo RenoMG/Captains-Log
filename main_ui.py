@@ -352,7 +352,7 @@ def run_main():
         event.app.exit()
 
     @kb.add('Q', filter=editing_active)
-    def quit_app(event):
+    def quit_app_uppercase(event):
         event.app.exit()
 
     main_app = Application(
