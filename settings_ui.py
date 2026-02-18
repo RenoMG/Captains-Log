@@ -6,9 +6,10 @@ from prompt_toolkit.formatted_text import FormattedText
 from prompt_toolkit.styles import Style
 from prompt_toolkit.filters import Condition
 import random, textwrap
-from functions import *
+from functions import change_logs_location_question, convert_date_to_julian
 from classes import computer_logic
-from data_processor import *
+from database.db import create_new_db
+from config.config import load_data, motd, config_json_write
 
 
 def run_settings():

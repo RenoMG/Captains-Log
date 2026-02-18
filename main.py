@@ -1,5 +1,5 @@
 import os
-from data_processor import p
+from config.config import p
 from first_boot import init_computer
 
 def main():

@@ -1,6 +1,7 @@
 from functions import *
 from classes import computer_logic
-from data_processor import *
+from database.db import create_new_db
+from config.config import config_json_write, first_boot_dir
 
 FIRST_BOOT_BODY=f"""On a far.. far away world... a computer from the Enterprise NX-01! Wait... OH YEAH THIS IS A DEMO LOG. Sorry, uhh so uhh yeah...\n\n
         Logs are stored like this in text files, and the Julian date and name of the log are stored at the top.\n

@@ -1,7 +1,6 @@
 import inquirer
 from astropy.time import Time
 from datetime import date
-from data_processor import *
 from pathlib import Path
 from prompt_toolkit.validation import Validator, ValidationError
 
