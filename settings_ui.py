@@ -13,9 +13,13 @@ from styles.lcars import LCARS_STYLE
 
 
 def run_settings():
+    get_motd = None
+    motd_name = None 
+    config_data = None 
+    computer = None
 
     def refresh_config_data():
-        global get_motd, motd_name, config_data, computer
+        nonlocal get_motd, motd_name, config_data, computer
         config_data = load_data()
         computer = computer_logic()
         computer.name = config_data["name"]

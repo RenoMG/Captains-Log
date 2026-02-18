@@ -13,20 +13,26 @@ from settings_ui import run_settings as settings_app
 from styles.lcars import LCARS_STYLE
 
 def run_main():
-    # Setup Instance Variables for the menu
-    config_data = load_data()
-    computer = computer_logic()
-    computer.name = config_data["name"]
-    computer.custom_MOTD = config_data["custom_MOTD_enabled"]
-    computer.MOTD_text = config_data["custom_motd"]
-    computer.logs_location = config_data["logs_location"]
+    get_motd = None
+    motd_name = None 
+    config_data = None 
+    computer = None
 
-    if computer.custom_MOTD is False:
-        get_motd = motd[random.randrange(len(motd))]
-    else: 
-        get_motd = computer.MOTD_text
+    def refresh_config_data():
+        nonlocal get_motd, motd_name, config_data, computer
+        config_data = load_data()
+        computer = computer_logic()
+        computer.name = config_data["name"]
+        computer.custom_MOTD = config_data["custom_MOTD_enabled"]
+        computer.MOTD_text = config_data["custom_motd"]
+        computer.logs_location = config_data["logs_location"]
 
-    motd_name = computer.name
+        if computer.custom_MOTD is False:
+            get_motd = motd[random.randrange(len(motd))]
+        else: 
+            get_motd = computer.MOTD_text
+
+    refresh_config_data()
 
     def check_motd_captain_name():
         if "{captain_name}" in get_motd:
@@ -168,20 +174,6 @@ def run_main():
         wrap_lines=True,
         height=16,
     )
-
-    def refresh_config_data():
-        nonlocal get_motd, motd_name, config_data, computer
-        config_data = load_data()
-        computer = computer_logic()
-        computer.name = config_data["name"]
-        computer.custom_MOTD = config_data["custom_MOTD_enabled"]
-        computer.MOTD_text = config_data["custom_motd"]
-        computer.logs_location = config_data["logs_location"]
-
-        if computer.custom_MOTD is False:
-            get_motd = motd[random.randrange(len(motd))]
-        else: 
-            get_motd = computer.MOTD_text
 
     def refresh_logs(main_app):
         nonlocal LOG_ENTRIES
