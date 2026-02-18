@@ -21,7 +21,7 @@ def run_main():
     computer.MOTD_text = config_data["custom_motd"]
     computer.logs_location = config_data["logs_location"]
 
-    if computer.custom_MOTD == False:
+    if computer.custom_MOTD is False:
         get_motd = motd[random.randrange(len(motd))]
     else: 
         get_motd = computer.MOTD_text
@@ -178,7 +178,7 @@ def run_main():
         computer.MOTD_text = config_data["custom_motd"]
         computer.logs_location = config_data["logs_location"]
 
-        if computer.custom_MOTD == False:
+        if computer.custom_MOTD is False:
             get_motd = motd[random.randrange(len(motd))]
         else: 
             get_motd = computer.MOTD_text
@@ -232,7 +232,7 @@ def run_main():
         
     @Condition
     def delete_confirm():
-        if deleting_log[0] == False:
+        if deleting_log[0] is False:
             return False
         else:
             return True

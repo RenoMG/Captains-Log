@@ -13,29 +13,9 @@ from styles.lcars import LCARS_STYLE
 
 
 def run_settings():
-    # Setup Instance Variables for the menu
-    config_data = load_data()
-    computer = computer_logic()
-    computer.name = config_data["name"]
-    computer.custom_MOTD = config_data["custom_MOTD_enabled"]
-    computer.MOTD_text = config_data["custom_motd"]
-    computer.logs_location = config_data["logs_location"]
-
-    if computer.custom_MOTD == False:
-        get_motd = motd[random.randrange(len(motd))]
-    else: 
-        get_motd = computer.MOTD_text
-
-    motd_name = computer.name
-
-    def check_motd_captain_name():
-        if "{captain_name}" in get_motd:
-            return get_motd.format(captain_name=motd_name)
-        else:
-            return get_motd
 
     def refresh_config_data():
-        nonlocal get_motd, motd_name, config_data, computer
+        global get_motd, motd_name, config_data, computer
         config_data = load_data()
         computer = computer_logic()
         computer.name = config_data["name"]
@@ -43,12 +23,20 @@ def run_settings():
         computer.MOTD_text = config_data["custom_motd"]
         computer.logs_location = config_data["logs_location"]
 
-        if computer.custom_MOTD == False:
+        if computer.custom_MOTD is False:
             get_motd = motd[random.randrange(len(motd))]
         else: 
             get_motd = computer.MOTD_text
 
         motd_name = computer.name
+
+    refresh_config_data()
+
+    def check_motd_captain_name():
+        if "{captain_name}" in get_motd:
+            return get_motd.format(captain_name=motd_name)
+        else:
+            return get_motd
 
     #TUI Variables
     SETTINGS_ITEMS = [("Set Name", "The Captain's Name! Captain for default,\n  or your own name!", "name"), 
