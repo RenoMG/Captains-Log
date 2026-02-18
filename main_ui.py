@@ -264,7 +264,7 @@ def run_main():
             scroll_offset[0] = current_selection[0] - max_visible + 1
 
     @kb.add('e', filter=editing_active)
-    def edit_entry(event):
+    def edit_log_content(event):
         if not editing[0] and not editing_title[0] and not creating_log[0] and not deleting_log[0]:
             editing[0] = True
             editor.text = LOG_ENTRIES[current_selection[0]][2]
@@ -272,7 +272,7 @@ def run_main():
             event.app.layout.focus(editor)
 
     @kb.add('r', filter=editing_active)
-    def edit_entry(event):
+    def rename_log(event):
         if not editing[0] and not editing_title[0] and not creating_log[0] and not deleting_log[0]:
             editing_title[0] = True
             editor_title.text = LOG_ENTRIES[current_selection[0]][0]
@@ -281,7 +281,7 @@ def run_main():
             event.app.layout.focus(editor_title)
 
     @kb.add('d', filter=editing_active)
-    def edit_entry(event):
+    def default_value(event):
         if not editing[0] and not editing_title[0] and not creating_log[0] and not deleting_log[0]:
             nonlocal status_message
             deleting_log[0] = True

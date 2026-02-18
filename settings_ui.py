@@ -242,7 +242,7 @@ def run_settings():
             scroll_offset[0] = current_selection[0] - max_visible + 1
 
     @kb.add('e', filter=editing_active)
-    def edit_entry(event):
+    def edit_log_content(event):
         if not editing[0] and not editing_location[0]:
             if SETTINGS_ITEMS[current_selection[0]][2] == "logs_location":
                 editing_location[0] = True
@@ -256,7 +256,7 @@ def run_settings():
                 event.app.layout.focus(editor)
 
     @kb.add('d', filter=editing_active)
-    def edit_entry(event):
+    def default_value(event):
         nonlocal status_message
         if SETTINGS_ITEMS[current_selection[0]][2] == "name":
             computer.name = "Captain"
