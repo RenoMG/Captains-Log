@@ -6,39 +6,29 @@ from prompt_toolkit.formatted_text import FormattedText
 from prompt_toolkit.filters import Condition
 import random, textwrap
 from functions import change_logs_location_question, convert_date_to_julian
-from classes import computer_logic
 from database.db import create_new_db
 from config.config import load_data, motd, config_json_write
 from styles.lcars import LCARS_STYLE
 
 
 def run_settings():
+    config_data = None
     get_motd = None
-    motd_name = None 
-    config_data = None 
-    computer = None
 
     def refresh_config_data():
-        nonlocal get_motd, motd_name, config_data, computer
+        nonlocal config_data, get_motd
         config_data = load_data()
-        computer = computer_logic()
-        computer.name = config_data["name"]
-        computer.custom_MOTD = config_data["custom_MOTD_enabled"]
-        computer.MOTD_text = config_data["custom_motd"]
-        computer.logs_location = config_data["logs_location"]
 
-        if computer.custom_MOTD is False:
+        if config_data["custom_MOTD_enabled"] is False:
             get_motd = motd[random.randrange(len(motd))]
         else: 
-            get_motd = computer.MOTD_text
-
-        motd_name = computer.name
+            get_motd = config_data["custom_motd"]
 
     refresh_config_data()
 
     def check_motd_captain_name():
         if "{captain_name}" in get_motd:
-            return get_motd.format(captain_name=motd_name)
+            return get_motd.format(captain_name=config_data["name"])
         else:
             return get_motd
 
@@ -237,15 +227,12 @@ def run_settings():
     def default_value(event):
         nonlocal status_message
         if SETTINGS_ITEMS[current_selection[0]][2] == "name":
-            computer.name = "Captain"
             config_data["name"] = "Captain"
             config_json_write(config_data)
             refresh_config_data()
             status_message = f"Name Updated: Captain"
             event.app.layout = get_layout()
         if SETTINGS_ITEMS[current_selection[0]][2] == "custom_motd":
-            computer.MOTD_text = "None"
-            computer.custom_MOTD = False
             config_data["custom_motd"] = "None"
             config_data["custom_MOTD_enabled"] = False
             config_json_write(config_data)
@@ -254,7 +241,6 @@ def run_settings():
             event.app.layout = get_layout()
 
         if SETTINGS_ITEMS[current_selection[0]][2] == "logs_location":
-            computer.logs_location = "storage/logs/"
             config_data["logs_location"] = "storage/logs/"
             config_json_write(config_data)
             refresh_config_data()
@@ -267,7 +253,6 @@ def run_settings():
         nonlocal status_message
         if editing[0]:
             if SETTINGS_ITEMS[current_selection[0]][2] == "name":
-                computer.name = editor.text
                 config_data["name"] = editor.text
                 config_json_write(config_data)
                 refresh_config_data()
@@ -275,8 +260,6 @@ def run_settings():
                 status_message = f"Name Updated: {textwrap.shorten(editor.text, width=30, placeholder="..." )}"
                 event.app.layout = get_layout()
             if SETTINGS_ITEMS[current_selection[0]][2] == "custom_motd":
-                computer.MOTD_text = editor.text
-                computer.custom_MOTD = enable_disable.current_value
                 config_data["custom_motd"] = editor.text
                 config_data["custom_MOTD_enabled"] = enable_disable.current_value
                 config_json_write(config_data)
@@ -287,7 +270,6 @@ def run_settings():
         if editing_location[0]:
             buffer = location_editor.buffer
             if buffer.validate():
-                computer.logs_location = location_editor.text
                 config_data["logs_location"] = location_editor.text
                 config_json_write(config_data)
                 refresh_config_data()

@@ -6,39 +6,29 @@ from prompt_toolkit.formatted_text import FormattedText
 from prompt_toolkit.filters import Condition
 import random, textwrap
 from functions import convert_date_to_julian
-from classes import computer_logic
 from database.db import list_log_names, list_all_log_data, edit_log, edit_log_title, create_log, delete_log
 from config.config import load_data, motd
 from settings_ui import run_settings as settings_app
 from styles.lcars import LCARS_STYLE
 
 def run_main():
+    config_data = None
     get_motd = None
-    motd_name = None 
-    config_data = None 
-    computer = None
 
     def refresh_config_data():
-        nonlocal get_motd, motd_name, config_data, computer
+        nonlocal config_data, get_motd
         config_data = load_data()
-        computer = computer_logic()
-        computer.name = config_data["name"]
-        computer.custom_MOTD = config_data["custom_MOTD_enabled"]
-        computer.MOTD_text = config_data["custom_motd"]
-        computer.logs_location = config_data["logs_location"]
 
-        if computer.custom_MOTD is False:
+        if config_data["custom_MOTD_enabled"] is False:
             get_motd = motd[random.randrange(len(motd))]
         else: 
-            get_motd = computer.MOTD_text
-
-        motd_name = computer.name
+            get_motd = config_data["custom_motd"]
 
     refresh_config_data()
 
     def check_motd_captain_name():
         if "{captain_name}" in get_motd:
-            return get_motd.format(captain_name=motd_name)
+            return get_motd.format(captain_name=config_data["name"])
         else:
             return get_motd
 
@@ -90,7 +80,7 @@ def run_main():
                 style = 'class:data'
             
             lines.append(marker)
-            lines.append((style, f'{f"{textwrap.shorten('Enterprise NX-01', width=17, placeholder="..." )}"} DATE {jd}  {f"{textwrap.shorten(computer.name, width=12, placeholder=f"{computer.name[:9]}..." )}"}\n'))
+            lines.append((style, f'{f"{textwrap.shorten('Enterprise NX-01', width=17, placeholder="..." )}"} DATE {jd}  {f"{textwrap.shorten(config_data["name"], width=12, placeholder=f"{config_data["name"][:9]}..." )}"}\n'))
         
         total = len(LOG_ENTRIES)
         lines.append(('class:title', f' ○ Showing {scroll_offset[0]+1}-{min(scroll_offset[0]+max_visible, total)} of {total} LOGS\n'))
@@ -103,7 +93,7 @@ def run_main():
             return FormattedText([
                 ('class:gold', '████'),
                 ('', ' '),
-                ('class:header', f' {textwrap.shorten(computer.name, width=25, placeholder=f"{computer.name[:20]}..." )} '),
+                ('class:header', f' {textwrap.shorten(config_data["name"], width=25, placeholder=f"{config_data["name"][:20]}..." )} '),
                 ('', ' '),
                 ('class:blue', '██████████████████████'),
                 ('', '\n\n'),
@@ -114,15 +104,11 @@ def run_main():
                 ('class:title', '╭───────────────────────────────────────────────╮\n'),
                 ('class:data', f'{textwrap.indent(textwrap.fill(body, width=45, placeholder=" ...", replace_whitespace=False), "  ")}\n')
             ])
-        except Exception as e:
-            current_selection[0] = max(0, current_selection[0] - 1)
-            if current_selection[0] < scroll_offset[0]:
-                scroll_offset[0] = current_selection[0]
-            refresh_logs(main_app)
+        except IndexError:
             return FormattedText([
                 ('class:gold', '████'),
                 ('', ' '),
-                ('class:header', f' {textwrap.shorten(computer.name, width=25, placeholder=f"{computer.name[:20]}..." )} '),
+                ('class:header', f' {textwrap.shorten(config_data["name"], width=25, placeholder=f"{config_data["name"][:20]}..." )} '),
                 ('', ' '),
                 ('class:blue', '██████████████████████'),
                 ('', '\n\n'),
@@ -274,6 +260,9 @@ def run_main():
             nonlocal status_message
             status_message = f"Deleted Log: {textwrap.shorten(LOG_ENTRIES[current_selection[0]][0], width=23, placeholder="..." )}"
             delete_log(LOG_ENTRIES[current_selection[0]][0])
+            current_selection[0] = max(0, current_selection[0] - 1)
+            if current_selection[0] < scroll_offset[0]:
+                scroll_offset[0] = current_selection[0]
             refresh_logs(event.app)
             deleting_log[0] = False
 
