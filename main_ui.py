@@ -32,6 +32,8 @@ def run_main():
         else: 
             get_motd = computer.MOTD_text
 
+        motd_name = computer.name
+
     refresh_config_data()
 
     def check_motd_captain_name():
