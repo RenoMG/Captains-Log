@@ -3,7 +3,6 @@ from prompt_toolkit.layout import Layout, HSplit, Window, FormattedTextControl
 from prompt_toolkit.widgets import TextArea, Frame
 from prompt_toolkit.key_binding import KeyBindings
 from prompt_toolkit.formatted_text import FormattedText
-from prompt_toolkit.styles import Style
 from prompt_toolkit.filters import Condition
 import random, textwrap
 from functions import convert_date_to_julian
@@ -11,6 +10,7 @@ from classes import computer_logic
 from database.db import list_log_names, list_all_log_data, edit_log, edit_log_title, create_log, delete_log
 from config.config import load_data, motd
 from settings_ui import run_settings as settings_app
+from styles.lcars import LCARS_STYLE
 
 def run_main():
     # Setup Instance Variables for the menu
@@ -33,21 +33,6 @@ def run_main():
             return get_motd.format(captain_name=motd_name)
         else:
             return get_motd
-
-    # LCARS color scheme
-    LCARS_STYLE = Style.from_dict({
-        'header': 'bg:#cc99ff #000000 bold',      # Lavender bar
-        'gold': 'bg:#ffcc66 #000000',              # Gold/tan bar
-        'orange': 'bg:#ff7700 #000000',            # Orange accent
-        'blue': 'bg:#99ccff #000000',              # Blue bar
-        'text': '#ff9944',                          # Orange text
-        'title': '#cc99ff bold',                    # Lavender titles
-        'data': '#99ccff',                          # Cyan data
-        'stardate': '#ffcc66',                      # Gold text
-        'status-on': '#00ff00',                     # Green dot
-        'status-off': '#666666',                    # Dim dot
-        'border': '#cc99ff',                        # Border color
-    })
 
     #TUI Variables
     LOG_ENTRIES = list_all_log_data()

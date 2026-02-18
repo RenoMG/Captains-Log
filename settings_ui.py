@@ -3,13 +3,13 @@ from prompt_toolkit.layout import Layout, HSplit, Window, FormattedTextControl
 from prompt_toolkit.widgets import TextArea, Frame, RadioList
 from prompt_toolkit.key_binding import KeyBindings
 from prompt_toolkit.formatted_text import FormattedText
-from prompt_toolkit.styles import Style
 from prompt_toolkit.filters import Condition
 import random, textwrap
 from functions import change_logs_location_question, convert_date_to_julian
 from classes import computer_logic
 from database.db import create_new_db
 from config.config import load_data, motd, config_json_write
+from styles.lcars import LCARS_STYLE
 
 
 def run_settings():
@@ -49,21 +49,6 @@ def run_settings():
             get_motd = computer.MOTD_text
 
         motd_name = computer.name
-
-    # LCARS color scheme
-    LCARS_STYLE = Style.from_dict({
-        'header': 'bg:#cc99ff #000000 bold',      # Lavender bar
-        'gold': 'bg:#ffcc66 #000000',              # Gold/tan bar
-        'orange': 'bg:#ff7700 #000000',            # Orange accent
-        'blue': 'bg:#99ccff #000000',              # Blue bar
-        'text': '#ff9944',                          # Orange text
-        'title': '#cc99ff bold',                    # Lavender titles
-        'data': '#99ccff',                          # Cyan data
-        'stardate': '#ffcc66',                      # Gold text
-        'status-on': '#00ff00',                     # Green dot
-        'status-off': '#666666',                    # Dim dot
-        'border': '#cc99ff',                        # Border color
-    })
 
     #TUI Variables
     SETTINGS_ITEMS = [("Set Name", "The Captain's Name! Captain for default,\n  or your own name!", "name"), 
