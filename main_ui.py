@@ -236,27 +236,38 @@ def run_main():
     @kb.add('e', filter=editing_active)
     def edit_log_content(event):
         if not editing[0] and not editing_title[0] and not creating_log[0] and not deleting_log[0]:
-            editing[0] = True
-            editor.text = LOG_ENTRIES[current_selection[0]][2]
-            event.app.layout = get_layout()
-            event.app.layout.focus(editor)
+            if len(LOG_ENTRIES) == 0:
+                nonlocal status_message
+                status_message = "You have no logs to edit!"
+            else:
+                editing[0] = True
+                editor.text = LOG_ENTRIES[current_selection[0]][2]
+                event.app.layout = get_layout()
+                event.app.layout.focus(editor)
 
     @kb.add('r', filter=editing_active)
     def rename_log(event):
         if not editing[0] and not editing_title[0] and not creating_log[0] and not deleting_log[0]:
-            editing_title[0] = True
-            editor_title.text = LOG_ENTRIES[current_selection[0]][0]
-            editor.text = LOG_ENTRIES[current_selection[0]][2]
-            event.app.layout = get_layout()
-            event.app.layout.focus(editor_title)
+            if len(LOG_ENTRIES) == 0:
+                nonlocal status_message
+                status_message = "You have no logs to rename!"
+            else:
+                editing_title[0] = True
+                editor_title.text = LOG_ENTRIES[current_selection[0]][0]
+                editor.text = LOG_ENTRIES[current_selection[0]][2]
+                event.app.layout = get_layout()
+                event.app.layout.focus(editor_title)
 
     @kb.add('d', filter=editing_active)
     def default_value(event):
         if not editing[0] and not editing_title[0] and not creating_log[0] and not deleting_log[0]:
-            nonlocal status_message
-            deleting_log[0] = True
-            status_message = f"Delete Log: {textwrap.shorten(LOG_ENTRIES[current_selection[0]][0], width=23, placeholder="..." )}?"
-            event.app.layout = get_layout()
+            if len(LOG_ENTRIES) == 0:
+                nonlocal status_message
+                status_message = "You have no logs to delete!"
+            else:
+                deleting_log[0] = True
+                status_message = f"Delete Log: {textwrap.shorten(LOG_ENTRIES[current_selection[0]][0], width=23, placeholder="..." )}?"
+                event.app.layout = get_layout()
 
     @kb.add('y', filter=delete_confirm)
     def confirm_yes(event):
@@ -361,5 +372,8 @@ def run_main():
             result = settings.run()
             current = result if result else "main"  # default back to main
             refresh_config_data()
+            scroll_offset = [0]
+            current_selection = [0]
+            refresh_logs(main_app)
         elif current == "quit":
             break
