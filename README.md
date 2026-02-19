@@ -6,7 +6,7 @@ This is a note taking TUI program.
 # Working State
 I feel as if this project is in a good standing.
 
-I put a lot of hours into this is my first big personal project and am ready to move on!
+I put a lot of hours into it and, this is my first big personal project and am ready to move on!
 
 Hopefully, everything works! I spent a LOT of time making sure to cover specific situations, etc.
 
