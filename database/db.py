@@ -11,6 +11,7 @@ def reload_data():
 reload_data()
 
 def database_conn_helper():
+    reload_data()
     return sqlite3.connect(l / LOGS_DB)
 
 def list_log_names():

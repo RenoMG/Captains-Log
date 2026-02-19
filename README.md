@@ -3,14 +3,14 @@ A place to write your Captain's Log in The Terminal. Directly Inspired By Star T
 
 This is a note taking TUI program.
 
-# WIP
-!! This is a work in progress and still in the smoothing stage !!
+# Working State
+I feel as if this project is in a good standing.
 
-Currently the project is usable but may have various bugs.
+I put a lot of hours into this is my first big personal project and am ready to move on!
 
-I feel that the project is in a state that is acceptable to me.
-  
-Feel free to mess around!
+Hopefully, everything works! I spent a LOT of time making sure to cover specific situations, etc.
+
+Enjoy! 
 
 ## Installation
 
@@ -31,6 +31,9 @@ Feel free to mess around!
 7. Run Program: ``uv run main.py``
 
 ## Details
+
+#### Built and tested with Linux only in mind
+I added some support for differing file system, etc. Just keep in mind that if something does not work in windows, it's because it was not built with Windows in mind!
   
 #### MOTD name variable
 

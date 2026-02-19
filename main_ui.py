@@ -128,7 +128,7 @@ def run_main():
     def get_footer():
         return FormattedText([
             ('class:title', '╰───────────────────────────────────────────────╯\n'),
-            ('class:title', f'  Status: {status_message}\n'),
+            ('class:title', f'  {status_message}\n'),
             ('', '\n'),
             ('class:gold', '█'),
             ('', ' '),

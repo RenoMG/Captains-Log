@@ -1,6 +1,5 @@
 from functions import *
 from classes import computer_logic
-from database.db import create_new_db
 from config.config import config_json_write, first_boot_dir
 
 FIRST_BOOT_BODY=f"""On a far.. far away world... a computer from the Enterprise NX-01! Wait... OH YEAH THIS IS A DEMO LOG. Sorry, uhh so uhh yeah...\n\n
@@ -85,6 +84,8 @@ def init_computer():
                 "logs_location": f"{computer.logs_location}"}
 
         config_json_write(config)
+
+        from database.db import create_new_db
 
         create_new_db(convert_date_to_julian(), FIRST_BOOT_BODY)
 

@@ -35,6 +35,6 @@ def first_boot_dir(logs_location):
     logs = Path(logs_location)
 
     if p.exists() == False:
-        Path.mkdir(STORAGE_LOCATION)
+        p.mkdir()
     if logs.exists() == False:
-        Path.mkdir(logs_location)
+        logs.mkdir()
