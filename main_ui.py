@@ -6,7 +6,8 @@ from prompt_toolkit.formatted_text import FormattedText
 from prompt_toolkit.filters import Condition
 import random, textwrap
 from functions import convert_date_to_julian
-from database.db import list_log_names, list_all_log_data, edit_log, edit_log_title, create_log, delete_log
+from pathlib import Path
+from database.db import list_log_names, list_all_log_data, edit_log, edit_log_title, create_log, delete_log, l, LOGS_DB, create_new_db
 from config.config import load_data, motd
 from settings_ui import run_settings as settings_app
 from styles.lcars import LCARS_STYLE
@@ -31,6 +32,9 @@ def run_main():
             return get_motd.format(captain_name=config_data["name"])
         else:
             return get_motd
+        
+    if Path(l / LOGS_DB).exists() is False:
+        create_new_db(2439374.5000000, "Uh oh, no database found on boot... did you delete it?")
 
     #TUI Variables
     LOG_ENTRIES = list_all_log_data()

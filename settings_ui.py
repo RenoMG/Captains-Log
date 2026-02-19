@@ -244,8 +244,11 @@ def run_settings():
             config_data["logs_location"] = "storage/logs/"
             config_json_write(config_data)
             refresh_config_data()
-            create_new_db(convert_date_to_julian(), NEW_DB_BODY)
             status_message = f"Log Location Updated: storage/logs/"
+            try:
+                create_new_db(convert_date_to_julian(), NEW_DB_BODY)
+            except FileExistsError:
+                status_message = "Database exists, skipping creation! Log Location Updated: storage/logs/"
             event.app.layout = get_layout()
 
     @kb.add('c-s')
@@ -273,9 +276,12 @@ def run_settings():
                 config_data["logs_location"] = location_editor.text
                 config_json_write(config_data)
                 refresh_config_data()
-                create_new_db(convert_date_to_julian(), NEW_DB_BODY)
                 editing_location[0] = False
                 status_message = f"Log Location Updated: {textwrap.shorten(location_editor.text, width=30, placeholder="..." )}"
+                try:
+                    create_new_db(convert_date_to_julian(), NEW_DB_BODY)
+                except FileExistsError:
+                    status_message = "Database exists, skipping creation! Log Location Updated: storage/logs/"
                 event.app.layout = get_layout()
             else:
                 status_message = buffer.validation_error

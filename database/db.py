@@ -3,12 +3,14 @@ from config.config import load_data, LOGS_DB
 from pathlib import Path
 from contextlib import closing
 
-# Log manipulation operations
-
-def database_conn_helper():
+def reload_data():
+    global config_data, l
     config_data = load_data()
     l = Path(config_data["logs_location"])
 
+reload_data()
+
+def database_conn_helper():
     return sqlite3.connect(l / LOGS_DB)
 
 def list_log_names():
@@ -92,6 +94,10 @@ def delete_log(title):
 
 # Functions for moving storage location if DB not exist
 def create_new_db(get_date_conversion, content):
+    reload_data()
+    if Path(l / LOGS_DB).exists():
+       raise FileExistsError
+
     with closing(database_conn_helper()) as db_file:
         try:
             with db_file:
@@ -114,4 +120,4 @@ def create_new_db(get_date_conversion, content):
                         (title, date, body),
                     )
         except Exception as e:
-            print(f"Error! I can't create the DB!")
+            print(f"{e}")
